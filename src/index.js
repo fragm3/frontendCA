@@ -9,13 +9,29 @@ import indexRoutes from "routes/index.jsx";
 
 const hist = createBrowserHistory();
 
-ReactDOM.render(
-  <Router history={hist}>
-    <Switch>
-      {indexRoutes.map((prop, key) => {
-        return <Route path={prop.path} component={prop.component} key={key} />;
-      })}
-    </Switch>
-  </Router>,
+class FinalApp extends React.Component {
+    constructor(props) {
+        super(props);  
+        this.state = {
+            
+        }
+     };
+
+    render() {
+        return(
+            <Router history={hist}>
+            <Switch>
+              {indexRoutes.map((prop, key) => {
+                return <Route path={prop.path} component={prop.component} key={key} />;
+              })}
+            </Switch>
+          </Router>
+        );
+    }
+}
+
+export default FinalApp;
+
+ReactDOM.render(<FinalApp/>,
   document.getElementById("root")
 );
