@@ -41,7 +41,7 @@ const headerStyle = theme => ({
     borderRadius: "3px",
     textTransform: "none",
     color: "inherit",
-    margin: "0",
+    margin: "2",
     "&:hover,&:focus": {
       background: "transparent"
     }

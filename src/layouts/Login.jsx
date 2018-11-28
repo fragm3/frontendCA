@@ -112,7 +112,7 @@ class LoginPage extends React.Component {
         message:'',
         snackopen:false
        });
-    }, 2500);
+    }, 5000);
   
     const { classes, ...rest } = this.props;
     const { redirect } = this.state

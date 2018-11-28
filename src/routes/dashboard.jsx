@@ -10,49 +10,66 @@ const dashboardRoutes = [
     sidebarName: "Overview",
     navbarName: "Overview",
     icon: Person,
-    component: UsersPage
+    component: UsersPage,
+    type:"view"
   },
   {
     path: "/adminpanel/question-management",
     sidebarName: "Question Management",
     navbarName: "Question Management",
     icon: Person,
-    component: UsersPage
+    component: UsersPage,
+    type:"view"
   },
   {
     path: "/adminpanel/test-groups",
     sidebarName: "Test Management",
     navbarName: "Test Management",
     icon: Person,
-    component: UsersPage
+    component: UsersPage,
+    type:"view"
   },
   {
     path: "/adminpanel/user-management",
     sidebarName: "User Management",
     navbarName: "User Management",
     icon: Person,
-    component: UsersPage
+    component: UsersPage,
+    type:"view"
   },
   {
     path: "/adminpanel/content-usage",
     sidebarName: "Content Usage",
     navbarName: "Content Usage",
     icon: Person,
-    component: UsersPage
+    component: UsersPage,
+    type:"view"
   },
   {
     path: "/adminpanel/courses",
     sidebarName: "Course Management",
     navbarName: "Course Management",
     icon: Person,
-    component: UsersPage
+    component: UsersPage,
+    type:"view"
+  },  
+  
+  {
+    path: "/adminpanel/settings/users",
+    sidebarName: "Settings",
+    navbarName: "Settings/Users",
+    icon: Settings,
+    component: UsersPage,
+    type:"subview"
   },
+
   {
     path: "/adminpanel/settings",
     sidebarName: "Settings",
     navbarName: "Settings",
     icon: Settings,
-    component: SettingsPage
+    component: SettingsPage,
+    type:"view"
   },
 
   { redirect: true, path: "/adminpanel", to: "/adminpanel/overview", navbarName: "Redirect" }

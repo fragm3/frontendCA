@@ -11,6 +11,7 @@
     "@types/markerclustererplus": "2.1.33",
     "ajv": "^5.0.0",
     "axios": "^0.18.0",
+    "change-case": "^3.0.2",
     "chartist": "0.10.1",
     "classnames": "2.2.6",
     "npm-run-all": "4.1.3",
