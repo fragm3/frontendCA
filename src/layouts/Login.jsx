@@ -12,7 +12,8 @@ import axios from 'axios';
 import { baseurl } from "ApiBase.jsx";
 import Snackbar from 'components/Snackbar.jsx';
 import Cookies from 'universal-cookie';
-import { Redirect } from 'react-router'
+import { Redirect } from 'react-router';
+import Paper from '@material-ui/core/Paper';
 
 class LoginPage extends React.Component {
   constructor(props) {

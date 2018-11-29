@@ -31,38 +31,12 @@ class Settings extends React.Component {
     const { classes } = this.props;
     return (
       <div>
+
         <GridContainer>
-          <GridItem xs={12} sm={6} md={6}>
+          {/* <GridItem xs={12} sm={6} md={6}>
             <Card>
-              <CardHeader color="warning" stats icon>
-                <CardIcon color="warning">
-                  <Icon>people</Icon>
-                </CardIcon>
-                <div className={classes.cardTitle }>
-                <h3 >
-                  User Management
-                </h3>
-                <p>
-                Manage users/user-roles of the dashboard. 
-                </p>
-                </div>
-              </CardHeader>
-              {/* <CardBody>
-                <p>Manage users/user-roles of the dashboard. </p>
-              </CardBody> */}
-              <CardFooter>
-              <Link className={classes.settingsbutton} to='/adminpanel/settings/users'>
-                <Button className={classes.settingsbutton} color="info" size="lg">
-                  Select
-                </Button>
-              </Link>
-              </CardFooter>  
-            </Card>
-          </GridItem>
-          <GridItem xs={12} sm={6} md={6}>
-            <Card>
-              <CardHeader color="warning" stats icon>
-                <CardIcon color="warning">
+              <CardHeader color="primary" stats icon>
+                <CardIcon color="primary">
                   <Icon>text_format</Icon>
                 </CardIcon>
                 <div className={classes.cardTitle }>
@@ -73,46 +47,26 @@ class Settings extends React.Component {
                 Manage passages used in various questions.
                 </p>
                 </div>
-              </CardHeader>
+              </CardHeader> */}
               {/* <CardBody>
                 <p>Manage users/user-roles of the dashboard. </p>
               </CardBody> */}
-              <CardFooter>
+              {/* <CardFooter>
               <Button className={classes.settingsbutton} color="info" size="lg">
                 Select
               </Button>
               </CardFooter>  
             </Card>
-          </GridItem>
-          <GridItem xs={12} sm={6} md={6}>
+          </GridItem> */}
+            <h5>Question Management</h5>
+          </GridContainer>
+          <GridContainer>
+      
+
+            <GridItem xs={12} sm={6} md={6}>
             <Card>
-              <CardHeader color="warning" stats icon>
-                <CardIcon color="warning">
-                  <Icon>sort</Icon>
-                </CardIcon>
-                <div className={classes.cardTitle }>
-                <h3 >
-                Topic Management
-                </h3>
-                <p>
-                Manage topics under which various questions belong
-                </p>
-                </div>
-              </CardHeader>
-              {/* <CardBody>
-                <p>Manage users/user-roles of the dashboard. </p>
-              </CardBody> */}
-              <CardFooter>
-              <Button className={classes.settingsbutton} color="info" size="lg">
-                Select
-              </Button>
-              </CardFooter>  
-            </Card>
-          </GridItem>
-          <GridItem xs={12} sm={6} md={6}>
-            <Card>
-              <CardHeader color="warning" stats icon>
-                <CardIcon color="warning">
+              <CardHeader color="primary" stats icon>
+                <CardIcon color="primary">
                   <Icon>folder</Icon>
                 </CardIcon>
                 <div className={classes.cardTitle }>
@@ -136,16 +90,48 @@ class Settings extends React.Component {
           </GridItem>
           <GridItem xs={12} sm={6} md={6}>
             <Card>
-                <CardHeader color="warning" stats icon>
-                  <CardIcon color="warning">
+              <CardHeader color="primary" stats icon>
+                <CardIcon color="primary">
+                  <Icon>sort</Icon>
+                </CardIcon>
+                <div className={classes.cardTitle }>
+                <h3 >
+                Topic Management
+                </h3>
+                <p>
+                Manage topics under which various questions belong
+                </p>
+                </div>
+              </CardHeader>
+              {/* <CardBody>
+                <p>Manage users/user-roles of the dashboard. </p>
+              </CardBody> */}
+              <CardFooter>
+              <Button className={classes.settingsbutton} color="info" size="lg">
+                Select
+              </Button>
+              </CardFooter>  
+            </Card>
+          </GridItem>
+          </GridContainer>
+          <GridContainer>
+            <h5>Test Management</h5>
+      
+            </GridContainer>
+        <GridContainer>
+      
+          <GridItem xs={12} sm={6} md={6}>
+            <Card>
+                <CardHeader color="primary" stats icon>
+                  <CardIcon color="primary">
                     <Icon>speaker_notes</Icon>
                   </CardIcon>
                   <div className={classes.cardTitle }>
                   <h3 >
-                  Instructions Management
+                  Profile Management
                   </h3>
                   <p>
-                  Manage instructions to various test sections
+                  Manage test profiles and their instructions
                   </p>
                   </div>
                 </CardHeader>
@@ -161,8 +147,8 @@ class Settings extends React.Component {
           </GridItem>
           <GridItem xs={12} sm={6} md={6}>
             <Card>
-              <CardHeader color="warning" stats icon>
-                <CardIcon color="warning">
+              <CardHeader color="primary" stats icon>
+                <CardIcon color="primary">
                   <Icon>folder</Icon>
                 </CardIcon>
                 <div className={classes.cardTitle }>
@@ -187,6 +173,41 @@ class Settings extends React.Component {
 
 
         </GridContainer>
+        <GridContainer>
+        <h5>User Management</h5>
+       
+        </GridContainer>
+         <GridContainer>
+      
+          <GridItem xs={12} sm={6} md={6}>
+            <Card>
+              <CardHeader color="primary" stats icon>
+                <CardIcon color="primary">
+                  <Icon>people</Icon>
+                </CardIcon>
+                <div className={classes.cardTitle }>
+                <h3 >
+                  Team Management
+                </h3>
+                <p>
+                Manage team users/roles of the dashboard. 
+                </p>
+                </div>
+              </CardHeader>
+              {/* <CardBody>
+                <p>Manage users/user-roles of the dashboard. </p>
+              </CardBody> */}
+              <CardFooter>
+              <Link className={classes.settingsbutton} to='/adminpanel/settings/users'>
+                <Button className={classes.settingsbutton} color="info" size="lg">
+                  Select
+                </Button>
+              </Link>
+              </CardFooter>  
+            </Card>
+          </GridItem>
+        </GridContainer>
+
        </div>
     );
   }

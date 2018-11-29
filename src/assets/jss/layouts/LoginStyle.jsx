@@ -1,7 +1,7 @@
 import {
    container
 } from "assets/jss/material-dashboard-react.jsx";
-import image from "assets/img/sidebar.jpg"
+import image from "assets/img/background.jpeg"
 import logo from "assets/img/CareerAnna_black.png"
 
 const appStyle = theme => ({

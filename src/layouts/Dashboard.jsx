@@ -11,7 +11,7 @@ import Sidebar from "components/Sidebar.jsx";
 import dashboardRoutes from "routes/dashboard.jsx";
 import dashboardStyle from "assets/jss/layouts/dashboardStyle.jsx";
 
-import image from "assets/img/sidebar.jpg";
+import image from "assets/img/sidebar2.jpg";
 import logo from "assets/img/CareerAnna.png";
 
 const switchRoutes = (
