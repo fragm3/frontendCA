@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import axios from 'axios'
-import { baseurl } from "ApiBase.jsx";
+import { operateData } from "OperateData.jsx";
 // @material-ui/core
 import withStyles from "@material-ui/core/styles/withStyles";
 import dashboardStyle from "assets/jss/views/dashboardStyle.jsx";
@@ -28,7 +27,7 @@ class UserManamgent extends React.Component {
         snackopen:false
     }
     this.handleChange = this.handleChange.bind(this);
-    this.operateData = this.operateData.bind(this);
+    // this.operateData = this.operateData.bind(this);
    };
 
 handleChange = (name,target) => event => {
@@ -63,7 +62,8 @@ handleChange = (name,target) => event => {
       data:data_new
     });
   
-    this.operateData('/user/crud_users/','update',
+    operateData('/user/crud_users/','update',false,
+    this,
     [
       ['fname', data_to_push['first_name']],
       ['lname',  data_to_push['last_name']],
@@ -72,70 +72,22 @@ handleChange = (name,target) => event => {
       ['is_manager', data_to_push['is_manager'] ? "1" : "0" ],
       ['is_staff', data_to_push['is_staff'] ? "1" : "0" ],
       ['is_active', data_to_push['is_active'] ? "1" : "0" ],
-    ],
-    false
-    );
+    ]);
   };
 
 
-
-operateData(url,operation,filters,update_result){
-  var bodyFormData = new FormData();
-  bodyFormData.set('operation', operation);
-  console.log(filters)
-  for (var i = 0; i < filters.length; i++) {             
-    bodyFormData.set(filters[i][0],filters[i][1]);  
-  }
-  axios({
-    method: 'post',
-    baseURL:{baseurl}.baseurl,
-    url: url,
-    data: bodyFormData,
-    config: { headers: {'Content-Type': 'multipart/form-data' }}
-    })
-    .then((response) => {
-        const valuemessage = response.data.message;
-        if(update_result){
-          this.setState({message:valuemessage, 
-            snackopen:true,
-            data:response.data.result
-          });
-        }else{
-          this.setState({message:valuemessage, 
-            snackopen:true,
-          })
-        }
-      })
-    .catch((response) => {
-      this.setState({message:'Something Went Wrong', 
-        snackopen:true,
-      })
-    });
-}
-
 componentDidMount() {
-    this.operateData('/user/crud_users/','read',
+    operateData('/user/crud_users/','read', true,this,
     [
       ['is_staff','1']
-    ],
-    true
-    );
+    ]);
   }
 
 render() {
-    setTimeout(() => {
-      this.setState({
-        message:'',
-        snackopen:false
-       });
-     }, 5000);
-
-     const { classes } = this.props;
-
+    const { classes } = this.props;
     return (
       <div>
         <GridContainer>
-
         </GridContainer>
         <GridContainer>
         <Paper className={classes.root}>
