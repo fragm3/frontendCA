@@ -13,8 +13,7 @@ import CardHeader from "components/Card/CardHeader.jsx";
 import CardFooter from "components/Card/CardFooter.jsx";
 import CardIcon from "components/Card/CardIcon.jsx";
 import dashboardStyle from "assets/jss/views/dashboardStyle.jsx";
-import Button from "components/Button.jsx"
-import { card } from "../assets/jss/material-dashboard-react";
+import Button from "components/Button.jsx";
 
 class Settings extends React.Component {
   state = {
@@ -32,37 +31,7 @@ class Settings extends React.Component {
     return (
       <div>
 
-        <GridContainer>
-          {/* <GridItem xs={12} sm={6} md={6}>
-            <Card>
-              <CardHeader color="primary" stats icon>
-                <CardIcon color="primary">
-                  <Icon>text_format</Icon>
-                </CardIcon>
-                <div className={classes.cardTitle }>
-                <h3 >
-                Passage Management
-                </h3>
-                <p>
-                Manage passages used in various questions.
-                </p>
-                </div>
-              </CardHeader> */}
-              {/* <CardBody>
-                <p>Manage users/user-roles of the dashboard. </p>
-              </CardBody> */}
-              {/* <CardFooter>
-              <Button className={classes.settingsbutton} color="info" size="lg">
-                Select
-              </Button>
-              </CardFooter>  
-            </Card>
-          </GridItem> */}
-            <h5>Question Management</h5>
-          </GridContainer>
           <GridContainer>
-      
-
             <GridItem xs={12} sm={6} md={6}>
             <Card>
               <CardHeader color="primary" stats icon>
@@ -114,10 +83,6 @@ class Settings extends React.Component {
             </Card>
           </GridItem>
           </GridContainer>
-          <GridContainer>
-            <h5>Test Management</h5>
-      
-            </GridContainer>
         <GridContainer>
       
           <GridItem xs={12} sm={6} md={6}>
@@ -172,10 +137,6 @@ class Settings extends React.Component {
           </GridItem>
 
 
-        </GridContainer>
-        <GridContainer>
-        <h5>User Management</h5>
-       
         </GridContainer>
          <GridContainer>
       

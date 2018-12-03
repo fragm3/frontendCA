@@ -34,7 +34,7 @@ const Sidebar = ({ ...props }) => {
         const whiteFontClasses = classNames({
           [" " + classes.whiteFont]: activeRoute(prop.path)
         });
-        if (prop.type == "view"){
+        if (prop.type === "view"){
           return (          
             <NavLink
               to={prop.path}

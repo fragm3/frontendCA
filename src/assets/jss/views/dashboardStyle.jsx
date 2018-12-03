@@ -79,10 +79,73 @@ const dashboardStyle  = theme => ({
     width: '100%',
     marginTop: theme.spacing.unit * 3,
     overflowX: 'auto',
+    display: 'flex',
+    flexWrap: 'wrap',
+
   },
   table: {
     minWidth: 700,
   },
+  formControl: {
+    margin: theme.spacing.unit,
+    minWidth: 120,
+    maxWidth: 300,
+  },
+  chips: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  chip: {
+    margin: theme.spacing.unit / 4,
+    backgroundColor: "#9c27b0",
+  },
+  noLabel: {
+    marginTop: theme.spacing.unit * 3,
+  },
+  // dropdownlabel:{
+  //   marginTop:16
+  // },
+  dropdownselect:{
+    marginBottom:"8px !important",
+  },
+  buttonicon:{
+    cursor:"pointer"
+  },
+  fullwidth:{
+    width:"100%"
+  },
+  floatingButton:{
+    margin: 0,
+    top: 'auto',
+    right: 20,
+    bottom: 20,
+    left: 'auto',
+    position: 'fixed',
+  },
+  modalDesignUser:{
+    // backgroundColor:"white"
+    top: "20%",
+    left: "30%",
+    width:"40%",
+    // padding:10
+  },
+  modalpaddingpaper:{
+    padding:20
+  },
+  radiohorizontal:{
+    flexDirection:"row"
+  },
+  '@media only screen and (max-width: 767px)' :{
+    modalDesignUser:{
+      // backgroundColor:"white"
+      top: "20%",
+      left: "5%",
+      width:"90%",
+      // padding:10
+    },  
+    /* phones */
+  },
+  
 });
 
 export default dashboardStyle;

@@ -1,6 +1,7 @@
 /* eslint-disable */
 import React from "react";
 import PropTypes from "prop-types";
+import { operateData } from "OperateData.jsx";
 // @material-ui/core components
 import withStyles from "@material-ui/core/styles/withStyles";
 // core components
@@ -8,12 +9,10 @@ import loginStyle from "assets/jss/layouts/LoginStyle.jsx";
 import Card from "components/Card/Card.jsx"
 import Button from "components/Button.jsx"
 import TextField from '@material-ui/core/TextField';
-import axios from 'axios';
-import { baseurl } from "ApiBase.jsx";
 import Snackbar from 'components/Snackbar.jsx';
 import Cookies from 'universal-cookie';
 import { Redirect } from 'react-router';
-import Paper from '@material-ui/core/Paper';
+
 
 class LoginPage extends React.Component {
   constructor(props) {
@@ -23,7 +22,8 @@ class LoginPage extends React.Component {
        emailpass:'',
        message:'',
        snackopen:false,
-       redirect:false
+       redirect:false,
+       data:{}
     }
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -38,84 +38,40 @@ class LoginPage extends React.Component {
       [name]: value
     });
   }
-
-
-  componentDidMount(){
-    const cookies = new Cookies();
-    var bodyFormData = new FormData();
-    bodyFormData.set('auth_token', cookies.get('auth_token'));
-    var redirect = false;
-    axios({
-    method: 'post',
-    baseURL:{baseurl}.baseurl,
-    data: bodyFormData,
-    url: '/user/login_user/',
-    config: { headers: {'Content-Type': 'multipart/form-data' }}
-    })
-    .then((response) => {
-        // console.log("1")
-        const valuemessage = response.data.message;
-        this.setState({message:valuemessage, 
-          // snackopen:true  
-        });
-        if(response.data.result.auth === true){
-          console.log("auth");
-          this.setState({redirect:true});
-        }
-      })
-    .catch((response) => {
-      this.setState({message:"Something Went Wrong!", 
-        // snackopen:true  
-      })
-      console.log(response);
-    });
-  }
   
   handleSubmit(event) {
-    var bodyFormData = new FormData();
-    bodyFormData.set('email', this.state.email);
-    bodyFormData.set('pass', this.state.emailpass);
-    // alert({baseurl}.baseurl)
-    axios({
-      method: 'post',
-      baseURL:{baseurl}.baseurl,
-      url: '/user/login_user/',
-      data: bodyFormData,
-      config: { headers: {'Content-Type': 'multipart/form-data' }}
-      })
-      .then((response) => {
-          const valuemessage = response.data.message;
-          this.setState({message:valuemessage, 
-            snackopen:true  
-          });
-          if(response.data.result.auth === true){
-            const user_auth_token = response.data.user.auth_token;
-            const cookies = new Cookies();
-            cookies.set('auth_token', user_auth_token, { path: '/' });
-            console.log(cookies.get('auth_token')); // Pacman
-            this.setState({redirect:true});
-            // return <Redirect to='/adminpanel' />
-          }
-        })
-      .catch(function (response) {
-        this.setState({message:"Something Went Wrong!", 
-          snackopen:true  
-        })
-        console.log(response);
-      });
+    operateData('/user/login_user/',true,true,false,false,this,
+    [
+      ['email',this.state.email],
+      ['pass',this.state.emailpass]
+    ])
   }
 
+  componentWillMount(){
+    const cookies = new Cookies();
+    const auth_token = cookies.get('auth_token')
+    operateData('/user/login_user/',true,false,false,false,this,
+    [
+      ['auth_token',auth_token]
+    ])
+  }
   
-  render() {
+  componentDidUpdate(){
+  try{
+    if (this.state.data.auth === true){
+      const user_auth_token = this.state.data.user.auth_token;
+      const cookies = new Cookies();
+      cookies.set('auth_token', user_auth_token, { path: '/' });
+      this.setState({redirect:true});
+    } 
+  }
+  catch(error){
 
-    setTimeout(() => {
-      this.setState({
-        message:'',
-        snackopen:false
-       });
-    }, 5000);
+  }
+}
   
-    const { classes, ...rest } = this.props;
+render() {  
+    const { classes } = this.props;
     const { redirect } = this.state
     if (redirect === true) {
       return <Redirect to='/adminpanel' />;
@@ -135,7 +91,6 @@ class LoginPage extends React.Component {
                   name="email"
                   autoComplete="email"
                   margin="normal"
-                  variant="outlined"
                   value = {this.state.email}
                   onChange={this.handleInputChange}
                 />
@@ -147,15 +102,12 @@ class LoginPage extends React.Component {
                   name="emailpass"
                   autoComplete="current-password"
                   margin="normal"
-                  variant="outlined"
                   value = {this.state.emailpass}
                   onChange={this.handleInputChange}
                 />
-            {/* {this.state.email} */}
             <br></br>
-            {/* {this.state.emailpass} */}
-            <Button className={classes.buttonForgot}color="transparent" >Forgot Password</Button>              
-            <Button onClick={this.handleSubmit} className={classes.buttonSubmit}color="info" >Submit</Button>
+            <Button className={classes.buttonForgot} color="transparent" >Forgot Password</Button>              
+            <Button onClick={this.handleSubmit} className={classes.buttonSubmit} color="info" >Submit</Button>
             <br></br>
                   <div className={classes.orButton}>Or</div> 
             <br></br>
@@ -167,9 +119,6 @@ class LoginPage extends React.Component {
         </div>
       );
     }
-
-    
-
   }
 }
 
