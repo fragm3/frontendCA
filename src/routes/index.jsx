@@ -6,7 +6,6 @@ const indexRoutes = [
                     { path: "/adminpanel", component: Dashboard },
                     { path: "/sample", component: Sample },
                     { path: "/", component: Login },
-    
-];
+                    ];
 
-export default indexRoutes;
+export default indexRoutes ;
