@@ -1,6 +1,8 @@
 // @material-ui/icons
 import Person from "@material-ui/icons/Person";
 import UsersPage from "views/UserManagement.jsx";
+import Template from "views/Template.jsx";
+import QuestionFolder from "views/QuestionFolderManagement.jsx";
 import SettingsPage from "views/Settings.jsx";
 import Settings from "@material-ui/icons/Settings";
 
@@ -10,7 +12,7 @@ const dashboardRoutes = [
     sidebarName: "Overview",
     navbarName: "Overview",
     icon: Person,
-    component: UsersPage,
+    component: Template,
     type:"view"
   },
   {
@@ -54,12 +56,22 @@ const dashboardRoutes = [
     type:"view"
   },  
   
+
   {
     path: "/adminpanel/settings/users",
     sidebarName: "Settings",
-    navbarName: "Settings/Users",
+    navbarName: "Settings > Users",
     icon: Settings,
     component: UsersPage,
+    type:"subview"
+  },
+
+  {
+    path: "/adminpanel/settings/questionfolder",
+    sidebarName: "Settings",
+    navbarName: "Settings > Question Folder Management",
+    icon: Settings,
+    component: QuestionFolder,
     type:"subview"
   },
 

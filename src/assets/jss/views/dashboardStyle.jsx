@@ -46,7 +46,7 @@ const dashboardStyle  = theme => ({
   },
   cardTitle: {
     color: "#3C4858",
-    marginTop: "0px",
+    marginTop: "3px",
     minHeight: "auto",
     fontWeight: "300",
     fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
@@ -91,6 +91,9 @@ const dashboardStyle  = theme => ({
     minWidth: 120,
     maxWidth: 300,
   },
+  tableHeader:{
+    background: "rgba(224, 224, 224, 1)"
+  },
   chips: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -107,6 +110,16 @@ const dashboardStyle  = theme => ({
   // },
   dropdownselect:{
     marginBottom:"8px !important",
+    width:150
+  },
+  filterIcon:{
+    margin:"8px! important",
+    height:"56px! important",
+    lineHeight:"56px! important",
+  },
+  textField:{
+    marginTop:0,
+    width:150
   },
   buttonicon:{
     cursor:"pointer"

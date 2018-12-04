@@ -20,7 +20,8 @@ function operateData(url,update_result,snackbar_show,getfilters,modaldata,compon
           const valuemessage = response.data.message;
           if(update_result){
             component.setState({
-              data:response.data.result
+              data:response.data.result,
+              total_records: response.data.total_records
             });
           }
           

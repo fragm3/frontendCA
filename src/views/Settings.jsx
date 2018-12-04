@@ -51,9 +51,11 @@ class Settings extends React.Component {
                 <p>Manage users/user-roles of the dashboard. </p>
               </CardBody> */}
               <CardFooter>
-              <Button className={classes.settingsbutton} color="info" size="lg">
-                Select
-              </Button>
+              <Link className={classes.settingsbutton} to='/adminpanel/settings/questionfolder'>
+                <Button className={classes.settingsbutton} color="info" size="lg">
+                  Select
+                </Button>
+              </Link>
               </CardFooter>  
             </Card>
           </GridItem>
