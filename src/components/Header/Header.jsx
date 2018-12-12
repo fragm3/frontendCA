@@ -15,16 +15,16 @@ import Button from "components/Button.jsx";
 import headerStyle from "assets/jss/components/headerStyle.jsx";
 
 function Header({ ...props }) {
-  function makeBrand() {
-    var name;
-    props.routes.map((prop, key) => {
-      if (prop.path === props.location.pathname) {
-        name = prop.navbarName;
-      }
-      return null;
-    });
-    return name;
-  }
+  // function makeBrand() {
+  //   var name;
+  //   props.routes.map((prop, key) => {
+  //     if (prop.path === props.location.pathname) {
+  //       name = prop.navbarName;
+  //     }
+  //     return null;
+  //   });
+  //   return name;
+  // }
 
   const { classes, color } = props;
   
@@ -37,7 +37,8 @@ function Header({ ...props }) {
       <Toolbar className={classes.container}>
         <div className={classes.flex}>
           <Button color="transparent" href="#" className={classes.title}>
-            {makeBrand()}
+            {/* {makeBrand()} */}
+            To Be Changed to bread crumb
           </Button>
         </div>
         <Hidden mdUp implementation="css">

@@ -216,9 +216,9 @@ class ApiLifeCheck extends React.Component {
 
 
 class ApiLifeCycleContent extends React.Component {
-   componentWillMount() {
-      console.log('Component WILL MOUNT!')
-   }
+   // componentWillMount() {
+   //    console.log('Component WILL MOUNT!')
+   // }
    componentDidMount() {
       console.log('Component DID MOUNT!')
    }
@@ -234,9 +234,9 @@ class ApiLifeCycleContent extends React.Component {
    componentDidUpdate(prevProps, prevState) {
       console.log('Component DID UPDATE!')
    }
-   componentWillUnmount() {
-      console.log('Component WILL UNMOUNT!')
-   }
+   // componentWillUnmount() {
+   //    console.log('Component WILL UNMOUNT!')
+   // }
    render() {
       return (
          <div>

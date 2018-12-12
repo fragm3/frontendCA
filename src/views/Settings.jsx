@@ -14,6 +14,7 @@ import CardFooter from "components/Card/CardFooter.jsx";
 import CardIcon from "components/Card/CardIcon.jsx";
 import dashboardStyle from "assets/jss/views/dashboardStyle.jsx";
 import Button from "components/Button.jsx";
+// import icon_folder from "assets/img/folder_icon.png";
 
 class Settings extends React.Component {
   state = {
@@ -32,6 +33,16 @@ class Settings extends React.Component {
       <div>
 
           <GridContainer>
+          {/* <GridItem xs={6} sm={3} md={3}>
+            <Card>
+              <div className={classes.iconcontainer}>
+                <img src={icon_folder}></img>             
+              </div>
+              <div className={classes.iconname}>
+              Question Folder Management
+              </div>
+            </Card>
+          </GridItem> */}
             <GridItem xs={12} sm={6} md={6}>
             <Card>
               <CardHeader color="primary" stats icon>
@@ -59,7 +70,7 @@ class Settings extends React.Component {
               </CardFooter>  
             </Card>
           </GridItem>
-          <GridItem xs={12} sm={6} md={6}>
+            <GridItem xs={12} sm={6} md={6}>
             <Card>
               <CardHeader color="primary" stats icon>
                 <CardIcon color="primary">
@@ -78,9 +89,11 @@ class Settings extends React.Component {
                 <p>Manage users/user-roles of the dashboard. </p>
               </CardBody> */}
               <CardFooter>
-              <Button className={classes.settingsbutton} color="info" size="lg">
-                Select
-              </Button>
+              <Link className={classes.settingsbutton} to='/adminpanel/settings/topicmanagement'>
+                <Button className={classes.settingsbutton} color="info" size="lg">
+                  Select
+                </Button>
+              </Link>
               </CardFooter>  
             </Card>
           </GridItem>
@@ -131,9 +144,11 @@ class Settings extends React.Component {
                 <p>Manage users/user-roles of the dashboard. </p>
               </CardBody> */}
               <CardFooter>
+              <Link className={classes.settingsbutton} to='/adminpanel/settings/testfolder'>
               <Button className={classes.settingsbutton} color="info" size="lg">
                 Select
               </Button>
+              </Link>
               </CardFooter>  
             </Card>
           </GridItem>

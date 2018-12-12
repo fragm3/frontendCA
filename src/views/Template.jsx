@@ -25,8 +25,8 @@ import Grid from '@material-ui/core/Grid';
 import Modal from '@material-ui/core/Modal';
 import Button from "components/Button.jsx"
 import TablePagination from '@material-ui/core/TablePagination';
-
-var url = '/question/crud_folders/'
+import IconButton from '@material-ui/core/IconButton';
+var url = '/test/crud_testfolders/'
 var emptymodaldata =  {
   "description": "",
   "id": "",
@@ -195,7 +195,7 @@ checkerror(){
 }
 
 keyUpHandler(e) {
-  if (this.state.firstsumbit && e.target.value != ""){
+  if (this.state.firstsumbit && e.target.value !== ""){
     this.checkerror()
   }
 }
@@ -329,13 +329,13 @@ render() {
         </Grid>
                 {/* Search Input Ends */}
         <Grid container={true}>
-        <Paper>
+        <Paper className={classes.tableContainer}>
           <Table className={classes.table}>
           <TableHead className={classes.tableHeader}>
               <TableRow>
                 <TableCell>Folder Name</TableCell>
                 <TableCell>Folder Description</TableCell>
-                <TableCell>Controls</TableCell>
+                <TableCell className={classes.lastchild}></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -348,13 +348,13 @@ render() {
                     <TableCell >
                     {row.description} 
                     </TableCell>
-                    <TableCell>
-                      <Button color="transparent" name="edit_button" value={row.id} onClick={this.modalOpen}>
+                    <TableCell className={classes.lastchild}>
+                      <IconButton  name="edit_button" value={row.id} onClick={this.modalOpen}>
                         <Icon>edit</Icon>
-                      </Button>    
-                      <Button color="transparent" name="edit_button" value={row.id} onClick={this.deleteData}>
+                      </IconButton>    
+                      <IconButton name="edit_button" value={row.id} onClick={this.deleteData}>
                         <Icon>delete</Icon>
-                      </Button>    
+                      </IconButton>    
 
                     </TableCell>
                   </TableRow>
@@ -395,8 +395,8 @@ render() {
                   label="Folder Name"
                   name = "folder_name"
                   required
+                  fullWidth
                   error={this.state.errormessage.indexOf("folder_name") >= 0}
-                  className = {classes.fullwidth}
                   value={this.state.modaldata.folder_name}
                   margin="normal"
                   onKeyUp={this.keyUpHandler}
@@ -409,8 +409,10 @@ render() {
                   label="Description"
                   name = "description"
                   required
+                  multiline
+                  rows="4"
+                  fullWidth
                   error={this.state.errormessage.indexOf("description") >= 0}
-                  className = {classes.fullwidth}
                   value={this.state.modaldata.description}
                   margin="normal"
                   onKeyUp={this.keyUpHandler}

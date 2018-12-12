@@ -5,7 +5,7 @@ import Login from "layouts/Login.jsx";
 const indexRoutes = [
                     { path: "/adminpanel", component: Dashboard },
                     { path: "/sample", component: Sample },
-                    { path: "/", component: Login },
+                    { path: "/", component: Login }
                     ];
 
 export default indexRoutes ;

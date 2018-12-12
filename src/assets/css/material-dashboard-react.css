@@ -59,7 +59,7 @@ html * {
     -moz-osx-font-smoothing: grayscale;
 }
 body {
-    background-color: #EEEEEE;
+    background-color: #ffffff;
     color: #3C4858;
     margin: 0;
     font-family: Roboto, Helvetica, Arial, sans-serif;
@@ -108,7 +108,7 @@ h6 {
 }
 
 body {
-    background-color: #EEEEEE;
+    background-color: #ffffff;
     color: #3C4858;
 }
 
@@ -228,3 +228,28 @@ footer ul li a:hover {
 .fullwidth-button{
     width: 100%;
 }
+
+
+.editor {
+    margin: 1rem 4rem;
+  }
+  
+  .editor .ql-container {
+    border-bottom-left-radius: 0.5em;
+    border-bottom-right-radius: 0.5em;
+    background: #fefcfc;
+  }
+  
+  /* Snow Theme */
+  .editor .ql-snow.ql-toolbar {
+    display: block;
+    background: #eaecec;
+    border-top-left-radius: 0.5em;
+    border-top-right-radius: 0.5em;
+  }
+  
+  
+  .editor .ql-editor {
+    min-height: 18em;
+  }
+  

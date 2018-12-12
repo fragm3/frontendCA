@@ -23,25 +23,23 @@ import Icon from '@material-ui/core/Icon';
 import Fab from '@material-ui/core/Fab';
 import Grid from '@material-ui/core/Grid';
 import Modal from '@material-ui/core/Modal';
-import Button from "components/Button.jsx";
+import Button from "components/Button.jsx"
 import TablePagination from '@material-ui/core/TablePagination';
 import IconButton from '@material-ui/core/IconButton';
-var changeCase = require('change-case');
-
-var url = '/question/crud_topics/'
+var url = '/test/crud_testfolders/'
 var emptymodaldata =  {
-  "category": "",
   "description": "",
   "id": "",
-  "sub_category": ""
+  "folder_name": ""
 }
 
-class TopicManagement extends React.Component {
+class QuestionFolder extends React.Component {
+  _isMounted = false;
   constructor(props) {
     super(props);  
     this.state = {
         data : [],
-        filterdata:{sort_by:[],category:[]},
+        filterdata:{sort_by:[]},
         // pagination variables
         page_num:0,
         page_size:10,
@@ -49,7 +47,6 @@ class TopicManagement extends React.Component {
         // filter variables
         search:"",
         sort_by:"",
-        category:"",
         // Snackbar variables
         message:'',
         snackopen:false,
@@ -80,7 +77,6 @@ handleFilterChange = event => {
     
     var search = this.state.search
     var sort_by = this.state.sort_by
-    var category = this.state.category
 
     if (event.target.name ==="search"){
       this.setState({ search: event.target.value });   
@@ -92,11 +88,6 @@ handleFilterChange = event => {
       sort_by = event.target.value
     }
 
-    if (event.target.name ==="category"){
-      this.setState({ category: event.target.value });   
-      category = event.target.value
-    }
-
 
   
     operateData(url, true,false,false,false,this,
@@ -106,13 +97,11 @@ handleFilterChange = event => {
       ['page_size',this.state.page_size],
       ['search',search],
       ['sort_by',sort_by],
-      ['category',category],
     ]);   
 
 };
 
 handleModalChange = event => {
-  console.log(event.target.name)
   var data = this.state.modaldata;
   data[event.currentTarget.name] = event.currentTarget.value ;
   this.setState({modaldata:data});
@@ -121,10 +110,9 @@ handleModalChange = event => {
 modalClose = event => {
 
   var emptymodaldata = {
-    "category": "",
     "description": "",
     "id": "",
-    "sub_category": ""
+    "folder_name": ""
   };
 
 
@@ -142,10 +130,9 @@ modalClose = event => {
 modalOpen = event => {
   
   var emptymodaldata = {
-    "category": "",
     "description": "",
     "id": "",
-    "sub_category": ""
+    "folder_name": ""
   };
 
   this.setState({errormessage:[]});
@@ -177,14 +164,13 @@ deleteData = event => {
 
     setTimeout(() => {
       this.modalClose()
-      operateData(url, true,false,true,false,this,
+      operateData(url, true,false,false,false,this,
       [
         ['operation', 'read'],
         ['page_num',(this.state.page_num+1)],
         ['page_size',this.state.page_size],
         ['search',this.state.search],
         ['sort_by',this.state.sort_by],
-        ['category',this.state.category],
   
       ]);
       }, 1000);
@@ -196,17 +182,13 @@ checkerror(){
   var submit=true
   var errorlist = []
   this.setState({errormessage:[]});
-  if (this.state.modaldata.category === ""){
+  if (this.state.modaldata.folder_name === ""){
     submit = false
-    errorlist.push("category")
+    errorlist.push("folder_name")
   }
   if (this.state.modaldata.description === ""){
     submit = false
     errorlist.push("description")
-  }
-  if (this.state.modaldata.sub_category === ""){
-    submit = false
-    errorlist.push("sub_category")
   }
 
   this.setState({errormessage:errorlist})
@@ -228,8 +210,7 @@ modalsubmitData = event => {
       this,
       [
         ['operation', 'create'],
-        ['category', this.state.modaldata.category],
-        ['subcategory', this.state.modaldata.sub_category],
+        ['folder_name', this.state.modaldata.folder_name],
         ['desc', this.state.modaldata.description],
       ]);
     }else{
@@ -237,22 +218,20 @@ modalsubmitData = event => {
       this,
       [
         ['operation', 'update'],
-        ['category', this.state.modaldata.category],
-        ['subcategory', this.state.modaldata.sub_category],
+        ['folder_name', this.state.modaldata.folder_name],
         ['desc', this.state.modaldata.description],
         ['data_id', this.state.modaldata.id],
       ]);
     }
     setTimeout(() => {
       this.modalClose()
-      operateData(url, true,false,true,false,this,
+      operateData(url, true,false,false,false,this,
       [
         ['operation', 'read'],
         ['page_num',(this.state.page_num+1)],
         ['page_size',this.state.page_size],
         ['search',this.state.search],
         ['sort_by',this.state.sort_by],
-        ['category',this.state.category],
   
       ]);
       }, 1000);
@@ -271,7 +250,6 @@ handleChangePage = (event, page) => {
     // Insert Read Filters
     ['search',this.state.search],
     ['sort_by',this.state.sort_by],
-    ['category',this.state.category],
 
   ]);
 };
@@ -287,19 +265,22 @@ handleChangeRowsPerPage = event => {
     // Insert Read Filters
     ['search',this.state.search],
     ['sort_by',this.state.sort_by],
-    ['category',this.state.category],
 
   ]);
 };
 
 componentWillMount(){
-  operateData(url, true,false,true,false,this,
+  operateData(url, true,false,true,false,this,this._isMounted,
   [
     ['operation', 'read'],
     ['page_num',(this.state.page_num + 1)],
     ['page_size',this.state.page_size],
     
   ]);
+}
+
+componentWillUnmount() {
+  this._isMounted = false;
 }
 
 render() {
@@ -313,27 +294,6 @@ render() {
         <Grid  container={true}  alignItems = "flex-end">
         <Grid item={true} xs={9}>
           <Icon className={classes.filterIcon}>filter_list</Icon>
-          <FormControl className={classes.formControl}>
-            <InputLabel className={classes.dropdownlabel} htmlFor="user-type">Category</InputLabel>
-            <Select 
-              className={classes.dropdownselect}
-              value={this.state.category}
-              onChange={this.handleFilterChange}
-              inputProps={{
-                name: 'category',
-                id: 'category',
-              }}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              {this.state.filterdata.category.map((sort,key) => (
-              <MenuItem key={key} value={sort.id}>
-                {sort.label}
-              </MenuItem>
-              ))}
-            </Select>
-          </FormControl> 
           <FormControl className={classes.formControl}>   
           <TextField
             id="searchInput"
@@ -345,9 +305,7 @@ render() {
             value = {this.state.search}
             onChange={this.handleFilterChange}
           />
-          </FormControl>  
-            
-
+            </FormControl>  
           </Grid>
           <Grid item={true} xs={3}>
           <Icon className={classes.filterIcon}>sort</Icon>
@@ -380,9 +338,8 @@ render() {
           <Table className={classes.table}>
           <TableHead className={classes.tableHeader}>
               <TableRow>
-                <TableCell>Category</TableCell>
-                <TableCell>Sub Category</TableCell>
-                <TableCell>Description</TableCell>
+                <TableCell>Folder Name</TableCell>
+                <TableCell>Folder Description</TableCell>
                 <TableCell className={classes.lastchild}></TableCell>
               </TableRow>
             </TableHead>
@@ -391,19 +348,16 @@ render() {
                 return (
                   <TableRow dataid={row.id} key={key}>
                     <TableCell >
-                    {changeCase.titleCase(row.category)} 
+                    {row.folder_name} 
                     </TableCell>
                     <TableCell >
-                    {changeCase.titleCase(row.sub_category)} 
-                    </TableCell>
-                    <TableCell >
-                    {changeCase.titleCase(row.description)} 
+                    {row.description} 
                     </TableCell>
                     <TableCell className={classes.lastchild}>
                       <IconButton  name="edit_button" value={row.id} onClick={this.modalOpen}>
                         <Icon>edit</Icon>
                       </IconButton>    
-                      <IconButton  name="edit_button" value={row.id} onClick={this.deleteData}>
+                      <IconButton name="edit_button" value={row.id} onClick={this.deleteData}>
                         <Icon>delete</Icon>
                       </IconButton>    
 
@@ -429,7 +383,6 @@ render() {
           onChangeRowsPerPage={this.handleChangeRowsPerPage}
         />
         </Paper>
-    
         </Grid>
         <Modal open={this.state.modal} onClose={this.modalClose} className={classes.modalDesignUser} >
           <Paper className={classes.modalpaddingpaper}>
@@ -442,32 +395,17 @@ render() {
             <h4><b>{this.state.is_new ? "Add" : "Edit"} Question Folder</b></h4> 
             </Grid>
             <Grid item xs={12}>
-                Reminder : This should be autocomplete 
-                <TextField 
-                  id="category_2"
-                  label="Category"
-                  name = "category"
-                  required
-                  fullWidth
-                  error={this.state.errormessage.indexOf("category") >= 0}
-                  value={this.state.modaldata.category}
-                  margin="normal"
-                  onKeyUp={this.keyUpHandler}
-                  onChange = {this.handleModalChange}
-                />
-            </Grid>
-            <Grid item xs={12}>
               <TextField 
-                  id="sub_category"
-                  label="Sub Category"
-                  name = "sub_category"
+                  id="folder_name"
+                  label="Folder Name"
+                  name = "folder_name"
                   required
-                  error={this.state.errormessage.indexOf("sub_category") >= 0}
-                  value={this.state.modaldata.sub_category}
+                  fullWidth
+                  error={this.state.errormessage.indexOf("folder_name") >= 0}
+                  value={this.state.modaldata.folder_name}
                   margin="normal"
                   onKeyUp={this.keyUpHandler}
                   onChange = {this.handleModalChange}
-                  fullWidth
                 />
             </Grid>
             <Grid item xs={12}>
@@ -477,8 +415,8 @@ render() {
                   name = "description"
                   required
                   multiline
-                  fullWidth
                   rows="4"
+                  fullWidth
                   error={this.state.errormessage.indexOf("description") >= 0}
                   value={this.state.modaldata.description}
                   margin="normal"
@@ -498,8 +436,8 @@ render() {
   }
 }
 
-TopicManagement.propTypes = {
+QuestionFolder.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(dashboardStyle)(TopicManagement);
+export default withStyles(dashboardStyle)(QuestionFolder);

@@ -32,6 +32,7 @@ function operateData(url,update_result,snackbar_show,getfilters,modaldata,compon
               snackopen:true,
             });
           }
+          
           if(getfilters){
             component.setState({
               filterdata:response.data.filter

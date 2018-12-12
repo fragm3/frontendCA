@@ -148,6 +148,55 @@ const dashboardStyle  = theme => ({
   radiohorizontal:{
     flexDirection:"row"
   },
+  lastchild :{
+    width:100  /* styles */
+  },
+  foldergrid:{
+    padding:5
+  },
+  folderstyle:{
+    // padding: 15,
+    borderRadius: "10px",
+    cursor:"pointer",
+    marginTop:10,
+    marginBottom:10,
+    "& :hover":{
+      background:"#E7F0FE",
+      borderRadius: "10px",
+     },
+     "& :hover foldername":{
+      color:"#1867D2"
+    }
+ 
+  },
+
+
+  folderdiv:{
+    display:"flex",
+    padding: "15px"
+    },
+  foldericoncontainer:{
+
+  },
+  foldericon:{
+    lineHeight:"30px",
+    color:"#8f8f8f"
+  },
+  foldername:{
+    padding:"0px 10px",
+    lineHeight:"30px",
+    fontWeight:500,
+    color:"#5f5f5f",
+    "text-overflow": "ellipsis",
+    "overflow": "hidden",
+    "white-space": "nowrap",
+    "& :hover":{
+      color:"#1867D2 !important"
+    }
+
+  },
+
+  
   '@media only screen and (max-width: 767px)' :{
     modalDesignUser:{
       // backgroundColor:"white"
@@ -156,8 +205,16 @@ const dashboardStyle  = theme => ({
       width:"90%",
       // padding:10
     },  
+    
     /* phones */
+
+
   },
+  '@media only screen and (min-width: 767px)' :{
+    tableContainer:{
+      width:"100%"
+    },    
+  }
   
 });
 

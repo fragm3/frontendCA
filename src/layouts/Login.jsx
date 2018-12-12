@@ -47,7 +47,7 @@ class LoginPage extends React.Component {
     ])
   }
 
-  componentWillMount(){
+  componentDidMount(){
     const cookies = new Cookies();
     const auth_token = cookies.get('auth_token')
     operateData('/user/login_user/',true,false,false,false,this,

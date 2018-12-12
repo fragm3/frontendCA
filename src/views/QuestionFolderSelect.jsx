@@ -1,15 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 import { operateData } from "OperateData.jsx";
 // @material-ui/core
 import withStyles from "@material-ui/core/styles/withStyles";
 import dashboardStyle from "assets/jss/views/dashboardStyle.jsx";
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
 import Snackbar from 'components/Snackbar.jsx';
 
 import TextField from '@material-ui/core/TextField';
@@ -20,28 +15,23 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 
 import Icon from '@material-ui/core/Icon';
-import Fab from '@material-ui/core/Fab';
 import Grid from '@material-ui/core/Grid';
-import Modal from '@material-ui/core/Modal';
-import Button from "components/Button.jsx";
 import TablePagination from '@material-ui/core/TablePagination';
-import IconButton from '@material-ui/core/IconButton';
-var changeCase = require('change-case');
+import Card from "components/Card/Card.jsx";
 
-var url = '/question/crud_topics/'
+var url = '/question/crud_folders/'
 var emptymodaldata =  {
-  "category": "",
   "description": "",
   "id": "",
-  "sub_category": ""
+  "folder_name": ""
 }
 
-class TopicManagement extends React.Component {
+class QuestionFolder extends React.Component {
   constructor(props) {
     super(props);  
     this.state = {
         data : [],
-        filterdata:{sort_by:[],category:[]},
+        filterdata:{sort_by:[]},
         // pagination variables
         page_num:0,
         page_size:10,
@@ -49,7 +39,6 @@ class TopicManagement extends React.Component {
         // filter variables
         search:"",
         sort_by:"",
-        category:"",
         // Snackbar variables
         message:'',
         snackopen:false,
@@ -80,7 +69,6 @@ handleFilterChange = event => {
     
     var search = this.state.search
     var sort_by = this.state.sort_by
-    var category = this.state.category
 
     if (event.target.name ==="search"){
       this.setState({ search: event.target.value });   
@@ -92,11 +80,6 @@ handleFilterChange = event => {
       sort_by = event.target.value
     }
 
-    if (event.target.name ==="category"){
-      this.setState({ category: event.target.value });   
-      category = event.target.value
-    }
-
 
   
     operateData(url, true,false,false,false,this,
@@ -106,13 +89,11 @@ handleFilterChange = event => {
       ['page_size',this.state.page_size],
       ['search',search],
       ['sort_by',sort_by],
-      ['category',category],
     ]);   
 
 };
 
 handleModalChange = event => {
-  console.log(event.target.name)
   var data = this.state.modaldata;
   data[event.currentTarget.name] = event.currentTarget.value ;
   this.setState({modaldata:data});
@@ -121,10 +102,9 @@ handleModalChange = event => {
 modalClose = event => {
 
   var emptymodaldata = {
-    "category": "",
     "description": "",
     "id": "",
-    "sub_category": ""
+    "folder_name": ""
   };
 
 
@@ -142,10 +122,9 @@ modalClose = event => {
 modalOpen = event => {
   
   var emptymodaldata = {
-    "category": "",
     "description": "",
     "id": "",
-    "sub_category": ""
+    "folder_name": ""
   };
 
   this.setState({errormessage:[]});
@@ -177,14 +156,13 @@ deleteData = event => {
 
     setTimeout(() => {
       this.modalClose()
-      operateData(url, true,false,true,false,this,
+      operateData(url, true,false,false,false,this,
       [
         ['operation', 'read'],
         ['page_num',(this.state.page_num+1)],
         ['page_size',this.state.page_size],
         ['search',this.state.search],
         ['sort_by',this.state.sort_by],
-        ['category',this.state.category],
   
       ]);
       }, 1000);
@@ -196,17 +174,13 @@ checkerror(){
   var submit=true
   var errorlist = []
   this.setState({errormessage:[]});
-  if (this.state.modaldata.category === ""){
+  if (this.state.modaldata.folder_name === ""){
     submit = false
-    errorlist.push("category")
+    errorlist.push("folder_name")
   }
   if (this.state.modaldata.description === ""){
     submit = false
     errorlist.push("description")
-  }
-  if (this.state.modaldata.sub_category === ""){
-    submit = false
-    errorlist.push("sub_category")
   }
 
   this.setState({errormessage:errorlist})
@@ -228,8 +202,7 @@ modalsubmitData = event => {
       this,
       [
         ['operation', 'create'],
-        ['category', this.state.modaldata.category],
-        ['subcategory', this.state.modaldata.sub_category],
+        ['folder_name', this.state.modaldata.folder_name],
         ['desc', this.state.modaldata.description],
       ]);
     }else{
@@ -237,22 +210,20 @@ modalsubmitData = event => {
       this,
       [
         ['operation', 'update'],
-        ['category', this.state.modaldata.category],
-        ['subcategory', this.state.modaldata.sub_category],
+        ['folder_name', this.state.modaldata.folder_name],
         ['desc', this.state.modaldata.description],
         ['data_id', this.state.modaldata.id],
       ]);
     }
     setTimeout(() => {
       this.modalClose()
-      operateData(url, true,false,true,false,this,
+      operateData(url, true,false,false,false,this,
       [
         ['operation', 'read'],
         ['page_num',(this.state.page_num+1)],
         ['page_size',this.state.page_size],
         ['search',this.state.search],
         ['sort_by',this.state.sort_by],
-        ['category',this.state.category],
   
       ]);
       }, 1000);
@@ -271,7 +242,6 @@ handleChangePage = (event, page) => {
     // Insert Read Filters
     ['search',this.state.search],
     ['sort_by',this.state.sort_by],
-    ['category',this.state.category],
 
   ]);
 };
@@ -287,7 +257,6 @@ handleChangeRowsPerPage = event => {
     // Insert Read Filters
     ['search',this.state.search],
     ['sort_by',this.state.sort_by],
-    ['category',this.state.category],
 
   ]);
 };
@@ -306,34 +275,10 @@ render() {
     const { classes } = this.props;
     return ( 
       <div>
-        <Fab color="primary" aria-label="Edit"  onClick={this.modalOpen}  name="newdata" className={classes.floatingButton}>
-            <Icon>add</Icon>
-        </Fab>
         {/* Search Input Starts */}
         <Grid  container={true}  alignItems = "flex-end">
         <Grid item={true} xs={9}>
           <Icon className={classes.filterIcon}>filter_list</Icon>
-          <FormControl className={classes.formControl}>
-            <InputLabel className={classes.dropdownlabel} htmlFor="user-type">Category</InputLabel>
-            <Select 
-              className={classes.dropdownselect}
-              value={this.state.category}
-              onChange={this.handleFilterChange}
-              inputProps={{
-                name: 'category',
-                id: 'category',
-              }}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              {this.state.filterdata.category.map((sort,key) => (
-              <MenuItem key={key} value={sort.id}>
-                {sort.label}
-              </MenuItem>
-              ))}
-            </Select>
-          </FormControl> 
           <FormControl className={classes.formControl}>   
           <TextField
             id="searchInput"
@@ -345,9 +290,7 @@ render() {
             value = {this.state.search}
             onChange={this.handleFilterChange}
           />
-          </FormControl>  
-            
-
+            </FormControl>  
           </Grid>
           <Grid item={true} xs={3}>
           <Icon className={classes.filterIcon}>sort</Icon>
@@ -376,46 +319,46 @@ render() {
         </Grid>
                 {/* Search Input Ends */}
         <Grid container={true}>
-        <Paper className={classes.tableContainer}>
-          <Table className={classes.table}>
-          <TableHead className={classes.tableHeader}>
-              <TableRow>
-                <TableCell>Category</TableCell>
-                <TableCell>Sub Category</TableCell>
-                <TableCell>Description</TableCell>
-                <TableCell className={classes.lastchild}></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {this.state.data.map((row,key) => {
-                return (
-                  <TableRow dataid={row.id} key={key}>
-                    <TableCell >
-                    {changeCase.titleCase(row.category)} 
-                    </TableCell>
-                    <TableCell >
-                    {changeCase.titleCase(row.sub_category)} 
-                    </TableCell>
-                    <TableCell >
-                    {changeCase.titleCase(row.description)} 
-                    </TableCell>
-                    <TableCell className={classes.lastchild}>
-                      <IconButton  name="edit_button" value={row.id} onClick={this.modalOpen}>
-                        <Icon>edit</Icon>
-                      </IconButton>    
-                      <IconButton  name="edit_button" value={row.id} onClick={this.deleteData}>
-                        <Icon>delete</Icon>
-                      </IconButton>    
+          <Grid item xs={3} className={classes.foldergrid}>
+          <Link className={classes.folderlink} to='/adminpanel/question-management/subfolder/'>
+            <Card dataid={""} className={classes.folderstyle}> 
+                <div className={classes.folderdiv}>
+                  <div className={classes.foldericoncontainer}>
+                    <Icon className={classes.foldericon}>folder</Icon>
+                  </div>
+                  <div className={classes.foldername}>
+                    All Questions
+                  </div>
+                </div>
+            </Card>
+            </Link>
+        </Grid>
+        </Grid>
 
-                    </TableCell>
-                  </TableRow>
+        <Grid container={true}>
+        {this.state.data.map((row,key) => {
+              
+                return (
+                  <Grid key={key} item xs={3} className={classes.foldergrid}>
+                  <Link className={classes.folderlink} to={'/adminpanel/question-management/subfolder/' + row.id} >
+                      <Card dataid={row.id} className={classes.folderstyle}> 
+                          <div className={classes.folderdiv}>
+                            <div className={classes.foldericoncontainer}>
+                              <Icon className={classes.foldericon}>folder</Icon>
+                            </div>
+                            <div className={classes.foldername}>
+                              {row.folder_name}
+                            </div>
+                          </div>
+                      </Card>
+                      </Link>
+                  </Grid>
               );
               })}
-            </TableBody>
-          </Table>
-          <TablePagination
+              <TablePagination
           rowsPerPageOptions={[5,10, 20, 30, 40, 50]}
           component="div"
+          labelRowsPerPage="Folders Per Page"
           count={this.state.total_records}
           rowsPerPage={this.state.page_size}
           page={this.state.page_num} 
@@ -428,78 +371,15 @@ render() {
           onChangePage={this.handleChangePage}
           onChangeRowsPerPage={this.handleChangeRowsPerPage}
         />
-        </Paper>
-    
         </Grid>
-        <Modal open={this.state.modal} onClose={this.modalClose} className={classes.modalDesignUser} >
-          <Paper className={classes.modalpaddingpaper}>
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            alignItems="center">
-            <Grid item xs={12}>
-            <h4><b>{this.state.is_new ? "Add" : "Edit"} Question Folder</b></h4> 
-            </Grid>
-            <Grid item xs={12}>
-                Reminder : This should be autocomplete 
-                <TextField 
-                  id="category_2"
-                  label="Category"
-                  name = "category"
-                  required
-                  fullWidth
-                  error={this.state.errormessage.indexOf("category") >= 0}
-                  value={this.state.modaldata.category}
-                  margin="normal"
-                  onKeyUp={this.keyUpHandler}
-                  onChange = {this.handleModalChange}
-                />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField 
-                  id="sub_category"
-                  label="Sub Category"
-                  name = "sub_category"
-                  required
-                  error={this.state.errormessage.indexOf("sub_category") >= 0}
-                  value={this.state.modaldata.sub_category}
-                  margin="normal"
-                  onKeyUp={this.keyUpHandler}
-                  onChange = {this.handleModalChange}
-                  fullWidth
-                />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField 
-                  id="description"
-                  label="Description"
-                  name = "description"
-                  required
-                  multiline
-                  fullWidth
-                  rows="4"
-                  error={this.state.errormessage.indexOf("description") >= 0}
-                  value={this.state.modaldata.description}
-                  margin="normal"
-                  onKeyUp={this.keyUpHandler}
-                  onChange = {this.handleModalChange}
-                />
-            </Grid>
-            <Grid item xs={12}>
-                <Button color="info" onClick={this.modalsubmitData}>Submit</Button>
-            </Grid>       
-            </Grid>       
-          </Paper>
-        </Modal>   
         <Snackbar open={this.state.snackopen} messagecontent={this.state.message}></Snackbar>
        </div>
     );
   }
 }
 
-TopicManagement.propTypes = {
+QuestionFolder.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(dashboardStyle)(TopicManagement);
+export default withStyles(dashboardStyle)(QuestionFolder);

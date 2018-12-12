@@ -27,9 +27,9 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import Button from "components/Button.jsx"
 import TablePagination from '@material-ui/core/TablePagination';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Hidden from '@material-ui/core/Hidden';
+import IconButton from '@material-ui/core/IconButton';
 var validator = require("email-validator");
-var changeCase = require('change-case')
+var changeCase = require('change-case');
 
 var url = '/user/crud_users/'
 var emptymodaldata = {'id':'',
@@ -270,7 +270,7 @@ checkerror(){
 }
 
 keyUpHandler(e) {
-  if (this.state.firstsumbit && e.target.value != ""){
+  if (this.state.firstsumbit && e.target.value !== ""){
     this.checkerror()
   }
 }
@@ -437,7 +437,7 @@ render() {
           </Grid>
         </Grid>
         <Grid container={true}>
-        <Paper>
+        <Paper className={classes.tableContainer}>
           <Table className={classes.table}>
             <TableHead className={classes.tableHeader}>
               <TableRow>
@@ -447,7 +447,7 @@ render() {
                 <TableCell>Active</TableCell>
                 <TableCell>Admin</TableCell>
                 <TableCell>Manager</TableCell>
-                <TableCell>Controls</TableCell>
+                <TableCell className={classes.lastchild}></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -490,10 +490,10 @@ render() {
                       // ref = "is_manager"
                       />
                     </TableCell>
-                    <TableCell>
-                      <Button color="transparent" name="edit_button" value={row.id} onClick={this.modalOpen}>
+                    <TableCell className={classes.lastchild}>
+                      <IconButton name="edit_button" value={row.id} onClick={this.modalOpen}>
                         <Icon>edit</Icon>
-                      </Button>    
+                      </IconButton>    
                     </TableCell>
                   </TableRow>
               );
