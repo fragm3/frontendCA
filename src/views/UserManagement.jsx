@@ -456,7 +456,7 @@ class UserManamgent extends React.Component {
                           disabled={row.is_admin}
                           onChange={this.handleChange(row.id, "is_manager")}
                           value={row.id}
-                          // ref = "is_manager"
+                        // ref = "is_manager"
                         />
                       </TableCell>
                       <TableCell className={classes.lastchild}>
@@ -560,8 +560,8 @@ class UserManamgent extends React.Component {
                     this.state.modaldata.is_admin
                       ? "admin"
                       : this.state.modaldata.is_manager
-                      ? "manager"
-                      : "staff"
+                        ? "manager"
+                        : "staff"
                   }
                   onChange={this.handleModalChange}
                 >

@@ -305,9 +305,13 @@ render() {
       <div>
         
         <Editor
+          
             triggerUpdate = {this.handleEditor}
             editorHtml = {this.state.sample.question}
         />
+
+
+
         {this.state.sample.question}
         <Fab color="primary" aria-label="Edit"  onClick={this.modalOpen}  name="newdata" className={classes.floatingButton}>
             <Icon>add</Icon>
