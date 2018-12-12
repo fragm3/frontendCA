@@ -1,2 +1,20 @@
-node_modules
+# dependencies
+/node_modules
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.idea
 .DS_Store
+.env
+npm-debug.log*
+package-log.json*
+yarn-debug.log*
+yarn-error.log*
+jest
+..env.swp
+package-lock.json
