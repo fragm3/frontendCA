@@ -16,7 +16,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "react-select";
-//import Select from "@material-ui/core/Select";
+// import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
 import MenuItem from "@material-ui/core/MenuItem";
 import Icon from "@material-ui/core/Icon";
@@ -469,7 +469,7 @@ class UserManamgent extends React.Component {
               <InputLabel className={classes.dropdownlabel} htmlFor="user-type">
                 User Type
               </InputLabel>
-              <React
+              <Select
                 isMulti
                 name="colors"
                 options={permOptions}
