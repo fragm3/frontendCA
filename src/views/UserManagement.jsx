@@ -40,7 +40,8 @@ const emptymodaldata = {
   email: "",
   is_admin: false,
   is_manager: false,
-  is_staff: true
+  is_staff: true,
+  is_active: true
 };
 
 class UserManamgent extends React.Component {
@@ -53,7 +54,7 @@ class UserManamgent extends React.Component {
           email: "",
           first_name: "",
           id: "",
-          is_active: false,
+          is_active: true,
           is_admin: false,
           is_manager: false,
           is_staff: true,
@@ -71,8 +72,8 @@ class UserManamgent extends React.Component {
       search: "",
       sort_by: "",
       // Snackbar variables
-      message: "",
-      snackopen: false,
+      snackbarMessage: "",
+      showSnackbar: false,
       // Modal variables
       modal: false,
       modaldata: emptymodaldata,
@@ -83,6 +84,12 @@ class UserManamgent extends React.Component {
     };
   }
 
+  hideSnackbar = () => {
+    setTimeout(
+      () => this.setState({ showSnackbar: false, snackbarMessage: "" }),
+      2500
+    );
+  };
   handleChange = (name, target) => event => {
     var data_old = this.state.data;
     var data_new = [];
@@ -136,12 +143,14 @@ class UserManamgent extends React.Component {
       ["is_active", data_to_push["is_active"] ? "1" : "0"]
     ])
       .then(response => {
-        const { message } = response.data;
+        console.log(response, "Response");
+        const { message } = response;
         this.setState({ showSnackbar: true, snackbarMessage: message });
       })
       .catch(error => {
         console.log("Could not user Data");
       });
+    this.hideSnackbar();
   };
 
   handleFilterChange = event => {
@@ -274,20 +283,6 @@ class UserManamgent extends React.Component {
     if (submit) {
       const userList = this.state.data;
       const index = userList.findIndex(x => x.id === this.state.activeUserId);
-
-      if (!this.state.activeUserId || index === -1) {
-        this.setState({
-          data: [this.state.modaldata, ...this.state.data]
-        });
-      } else {
-        this.setState({
-          data: [
-            ...this.state.data.slice(0, index),
-            this.state.modaldata,
-            ...this.state.data.slice(index + 1)
-          ]
-        });
-      }
       if (this.state.is_new) {
         api(url, [
           ["operation", "create"],
@@ -300,9 +295,11 @@ class UserManamgent extends React.Component {
           ["is_staff", this.state.modaldata.is_staff ? "1" : "0"],
           ["is_active", "1"]
         ]).then(response => {
+          console.log(response, "Response from create");
           this.setState({
-            snackbarMessage: response.valuemessage,
-            showSnackbar: true
+            snackbarMessage: response.message,
+            showSnackbar: true,
+            data: [response.result[0], ...this.state.data]
           });
         });
       } else {
@@ -316,14 +313,21 @@ class UserManamgent extends React.Component {
           ["is_staff", this.state.modaldata.is_staff ? "1" : "0"],
           ["is_active", this.state.modaldata.is_active ? "1" : "0"]
         ]).then(response => {
+          console.log(response, "Response from edit");
           this.setState({
-            snackbarMessage: response.valuemessage,
-            showSnackbar: true
+            snackbarMessage: response.message,
+            showSnackbar: true,
+            data: [
+              ...this.state.data.slice(0, index),
+              response.result[0],
+              ...this.state.data.slice(index + 1)
+            ]
           });
         });
       }
       this.modalClose();
     }
+    this.hideSnackbar();
   };
 
   handleChangePage = (event, page) => {
@@ -378,7 +382,7 @@ class UserManamgent extends React.Component {
   }
 
   render() {
-    console.log(this.state.data, "data");
+    console.log(this.state.modaldata, "data");
     const { classes } = this.props;
     let renderTableBodyElement = null;
     if (this.state.data !== null) {
@@ -638,8 +642,9 @@ class UserManamgent extends React.Component {
           </Paper>
         </Modal>
         <Snackbar
-          open={this.state.snackopen}
-          messagecontent={this.state.message}
+          open={this.state.showSnackbar}
+          messagecontent={this.state.snackbarMessage}
+          autoHideDuration={2000}
         />
       </div>
     );
