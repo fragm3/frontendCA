@@ -68,7 +68,7 @@ class UserManamgent extends React.Component {
       page_size: 10,
       total_records: 0,
       // filter variables
-      user_filter: "",
+      user_filter: [],
       search: "",
       sort_by: "",
       // Snackbar variables
@@ -80,7 +80,8 @@ class UserManamgent extends React.Component {
       is_new: true,
       errormessage: [],
       firstSubmit: false,
-      activeUserId: ""
+      activeUserId: "",
+      name: []
     };
   }
 
@@ -95,8 +96,6 @@ class UserManamgent extends React.Component {
     var data_new = [];
     var data = {};
     var data_to_push = {};
-    console.log(name, "name");
-    console.log(target, "target");
 
     for (var i = 0; i < data_old.length; i++) {
       if (target === "first_name" || target === "last_name") {
@@ -169,8 +168,9 @@ class UserManamgent extends React.Component {
     }
 
     if (event.target.name === "user_type") {
+      console.log(event.target.value, "event.target.value");
       if (event.target.value === "") {
-        this.setState({ user_filter: "staff" });
+        this.setState({ user_filter: ["staff"] });
         user_type = "staff";
       } else {
         user_type = event.target.value;
@@ -187,6 +187,7 @@ class UserManamgent extends React.Component {
       ["page_size", this.state.page_size]
     ]).then(response => {
       const { result, total_records } = response;
+      console.log(response.result, "For filter change");
       this.setState({ data: result, total_records: total_records });
     });
   };
@@ -221,12 +222,9 @@ class UserManamgent extends React.Component {
       errormessage: [],
       firstSubmit: false
     });
-
-    // console.log(this.state.modaldata)
   };
 
   editUserModal = event => {
-    console.log(event.currentTarget.value, "Id");
     this.setState({
       modal: true,
       is_new: false,
@@ -273,11 +271,11 @@ class UserManamgent extends React.Component {
   }
 
   keyUpHandler = event => {
-    if (this.state.firstSubmit && (event.target.value).length <= 1) {
+    if (this.state.firstSubmit && event.target.value.length <= 1) {
       this.checkerror();
       console.log("check run");
     }
-  }
+  };
 
   modalsubmitData = event => {
     var submit = this.checkerror();
@@ -363,8 +361,9 @@ class UserManamgent extends React.Component {
       ["page_size", event.target.value]
     ]).then(response => {
       const { result } = response;
-      this.setState({ data: result
-        // total_records: total_records 
+      this.setState({
+        data: result
+        // total_records: total_records
       });
     });
   };
@@ -386,7 +385,6 @@ class UserManamgent extends React.Component {
   }
 
   render() {
-    console.log(this.state.modaldata, "data");
     const { classes } = this.props;
     let renderTableBodyElement = null;
     if (this.state.data !== null) {
@@ -454,21 +452,21 @@ class UserManamgent extends React.Component {
                 User Type
               </InputLabel>
               <Select
-                className={classes.dropdownselect}
+                multiple
                 value={this.state.user_filter}
                 onChange={this.handleFilterChange}
                 inputProps={{
                   name: "user_type",
                   id: "user-type"
                 }}
+                renderValue={selected => selected.join(", ")}
+                className={classes.dropdownselect}
               >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
                 {this.state.filterdata.user_type.map((usertype, key) => (
                   <MenuItem key={key} value={usertype.id}>
                     {usertype.label}
                   </MenuItem>
+                ))}
                 ))}
               </Select>
             </FormControl>
