@@ -174,7 +174,7 @@ class UserManamgent extends React.Component {
       ["user_type", user_type],
       ["search", search],
       ["sort_by", sort_by],
-      ["page_num", this.state.page_num + 1],
+      ["page_num", 1],
       ["page_size", this.state.page_size]
     ]).then(response => {
       const { result, total_records } = response;
