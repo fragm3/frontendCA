@@ -78,7 +78,7 @@ class UserManamgent extends React.Component {
       modaldata: emptymodaldata,
       is_new: true,
       errormessage: [],
-      firstsumbit: false,
+      firstSubmit: false,
       activeUserId: ""
     };
   }
@@ -210,7 +210,7 @@ class UserManamgent extends React.Component {
       modaldata: Object.assign({}, emptymodaldata),
       is_new: true,
       errormessage: [],
-      firstsumbit: false
+      firstSubmit: false
     });
 
     // console.log(this.state.modaldata)
@@ -263,15 +263,16 @@ class UserManamgent extends React.Component {
     return submit;
   }
 
-  // keyUpHandler(e) {
-  //   if (this.state.firstsumbit && e.target.value !== "") {
-  //     this.checkerror();
-  //   }
-  // }
+  keyUpHandler = event => {
+    if (this.state.firstSubmit && (event.target.value).length <= 1) {
+      this.checkerror();
+      console.log("check run");
+    }
+  }
 
   modalsubmitData = event => {
     var submit = this.checkerror();
-    this.setState({ firstsumbit: true });
+    this.setState({ firstSubmit: true });
     if (submit) {
       const userList = this.state.data;
       const index = userList.findIndex(x => x.id === this.state.activeUserId);
