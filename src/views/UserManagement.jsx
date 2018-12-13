@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { operateData } from "OperateData.jsx";
+import { api } from "./../helpers/api.js";
 // @material-ui/core
 import withStyles from "@material-ui/core/styles/withStyles";
 import dashboardStyle from "assets/jss/views/dashboardStyle.jsx";
@@ -28,6 +28,7 @@ import Button from "components/Button.jsx";
 import TablePagination from "@material-ui/core/TablePagination";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import IconButton from "@material-ui/core/IconButton";
+
 var validator = require("email-validator");
 var changeCase = require("change-case");
 
@@ -46,7 +47,20 @@ class UserManamgent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [],
+      data: [
+        {
+          auth_token: "",
+          email: "",
+          first_name: "",
+          id: "",
+          is_active: false,
+          is_admin: false,
+          is_manager: false,
+          is_staff: true,
+          last_name: "",
+          secret_string: ""
+        }
+      ],
       filterdata: { user_type: [], sort_by: [] },
       // pagination variables
       page_num: 0,
@@ -64,22 +78,9 @@ class UserManamgent extends React.Component {
       modaldata: emptymodaldata,
       is_new: true,
       errormessage: [],
-      firstsumbit: false
+      firstsumbit: false,
+      activeUserId: ""
     };
-    // Table Data Management
-    this.handleChange = this.handleChange.bind(this);
-    // Filter Function
-    this.handleFilterChange = this.handleFilterChange.bind(this);
-    // Modal Management
-    this.modalClose = this.modalClose.bind(this);
-    this.modalOpen = this.modalOpen.bind(this);
-    this.handleModalChange = this.handleModalChange.bind(this);
-    this.modalsubmitData = this.modalsubmitData.bind(this);
-    this.checkerror = this.checkerror.bind(this);
-    this.keyUpHandler = this.keyUpHandler.bind(this);
-    // Pagination
-    this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
-    this.handleChangePage = this.handleChangePage.bind(this);
   }
 
   handleChange = (name, target) => event => {
@@ -87,9 +88,10 @@ class UserManamgent extends React.Component {
     var data_new = [];
     var data = {};
     var data_to_push = {};
+    console.log(name, "name");
+    console.log(target, "target");
 
     for (var i = 0; i < data_old.length; i++) {
-      data = {};
       if (target === "first_name" || target === "last_name") {
         if (data_old[i].id === name) {
           data = data_old[i];
@@ -123,7 +125,7 @@ class UserManamgent extends React.Component {
       data: data_new
     });
 
-    operateData(url, false, true, false, false, this, [
+    api(url, [
       ["operation", "update"],
       ["fname", data_to_push["first_name"]],
       ["lname", data_to_push["last_name"]],
@@ -132,7 +134,14 @@ class UserManamgent extends React.Component {
       ["is_manager", data_to_push["is_manager"] ? "1" : "0"],
       ["is_staff", data_to_push["is_staff"] ? "1" : "0"],
       ["is_active", data_to_push["is_active"] ? "1" : "0"]
-    ]);
+    ])
+      .then(response => {
+        const { message } = response.data;
+        this.setState({ showSnackbar: true, snackbarMessage: message });
+      })
+      .catch(error => {
+        console.log("Could not user Data");
+      });
   };
 
   handleFilterChange = event => {
@@ -159,14 +168,17 @@ class UserManamgent extends React.Component {
       this.setState({ user_filter: event.target.value });
     }
 
-    operateData(url, true, false, false, false, this, [
+    api(url, [
       ["operation", "read"],
       ["user_type", user_type],
       ["search", search],
       ["sort_by", sort_by],
       ["page_num", this.state.page_num + 1],
       ["page_size", this.state.page_size]
-    ]);
+    ]).then(response => {
+      const { result, total_records } = response;
+      this.setState({ data: result, total_records: total_records });
+    });
   };
 
   handleModalChange = event => {
@@ -203,24 +215,28 @@ class UserManamgent extends React.Component {
     // console.log(this.state.modaldata)
   };
 
-  modalOpen = event => {
-    this.setState({ errormessage: [] });
-    if (event.currentTarget.name === "newdata") {
-      this.setState({
-        modal: true,
-        modaldata: Object.assign({}, emptymodaldata),
-        is_new: true
-      });
-    } else {
-      operateData(url, false, false, false, true, this, [
-        ["operation", "read"],
-        ["data_id", event.currentTarget.value]
-      ]);
-      this.setState({
-        modal: true,
-        is_new: false
-      });
-    }
+  editUserModal = event => {
+    console.log(event.currentTarget.value, "Id");
+    this.setState({
+      modal: true,
+      is_new: false,
+      errormessage: [],
+      activeUserId: event.currentTarget.value
+    });
+    api(url, [
+      ["operation", "read"],
+      ["data_id", event.currentTarget.value]
+    ]).then(response => {
+      this.setState({ modaldata: response.result[0] });
+    });
+  };
+
+  addUserModal = () => {
+    this.setState({
+      modal: true,
+      modaldata: Object.assign({}, emptymodaldata),
+      is_new: true
+    });
   };
 
   checkerror() {
@@ -246,18 +262,34 @@ class UserManamgent extends React.Component {
     return submit;
   }
 
-  keyUpHandler(e) {
-    if (this.state.firstsumbit && e.target.value !== "") {
-      this.checkerror();
-    }
-  }
+  // keyUpHandler(e) {
+  //   if (this.state.firstsumbit && e.target.value !== "") {
+  //     this.checkerror();
+  //   }
+  // }
 
   modalsubmitData = event => {
     var submit = this.checkerror();
     this.setState({ firstsumbit: true });
     if (submit) {
+      const userList = this.state.data;
+      const index = userList.findIndex(x => x.id === this.state.activeUserId);
+
+      if (!this.state.activeUserId || index === -1) {
+        this.setState({
+          data: [this.state.modaldata, ...this.state.data]
+        });
+      } else {
+        this.setState({
+          data: [
+            ...this.state.data.slice(0, index),
+            this.state.modaldata,
+            ...this.state.data.slice(index + 1)
+          ]
+        });
+      }
       if (this.state.is_new) {
-        operateData(url, false, true, false, false, this, [
+        api(url, [
           ["operation", "create"],
           ["fname", this.state.modaldata.first_name],
           ["lname", this.state.modaldata.last_name],
@@ -267,9 +299,14 @@ class UserManamgent extends React.Component {
           ["is_manager", this.state.modaldata.is_manager ? "1" : "0"],
           ["is_staff", this.state.modaldata.is_staff ? "1" : "0"],
           ["is_active", "1"]
-        ]);
+        ]).then(response => {
+          this.setState({
+            snackbarMessage: response.valuemessage,
+            showSnackbar: true
+          });
+        });
       } else {
-        operateData(url, false, true, false, false, this, [
+        api(url, [
           ["operation", "update"],
           ["fname", this.state.modaldata.first_name],
           ["lname", this.state.modaldata.last_name],
@@ -278,24 +315,20 @@ class UserManamgent extends React.Component {
           ["is_manager", this.state.modaldata.is_manager ? "1" : "0"],
           ["is_staff", this.state.modaldata.is_staff ? "1" : "0"],
           ["is_active", this.state.modaldata.is_active ? "1" : "0"]
-        ]);
+        ]).then(response => {
+          this.setState({
+            snackbarMessage: response.valuemessage,
+            showSnackbar: true
+          });
+        });
       }
-      operateData(url, true, false, false, false, this, [
-        ["operation", "read"],
-        ["user_type", "staff"],
-        ["user_type", this.state.user_type],
-        ["search", this.state.search],
-        ["sort_by", this.state.sort_by],
-        ["page_num", this.state.page_num + 1],
-        ["page_size", this.state.page_size]
-      ]);
       this.modalClose();
     }
   };
 
   handleChangePage = (event, page) => {
     this.setState({ page_num: page });
-    operateData(url, true, false, true, false, this, [
+    api(url, [
       ["operation", "read"],
       ["user_type", "staff"],
       ["user_type", this.state.user_type],
@@ -303,12 +336,18 @@ class UserManamgent extends React.Component {
       ["sort_by", this.state.sort_by],
       ["page_num", page + 1],
       ["page_size", this.state.page_size]
-    ]);
+    ]).then(response => {
+      const { result, total_records } = response;
+      this.setState({
+        data: result,
+        total_records: total_records
+      });
+    });
   };
 
   handleChangeRowsPerPage = event => {
     this.setState({ page_size: event.target.value });
-    operateData(url, true, false, true, false, this, [
+    api(url, [
       ["operation", "read"],
       ["user_type", "staff"],
       ["user_type", this.state.user_type],
@@ -316,26 +355,84 @@ class UserManamgent extends React.Component {
       ["sort_by", this.state.sort_by],
       ["page_num", this.state.page_num + 1],
       ["page_size", event.target.value]
-    ]);
+    ]).then(response => {
+      const { result, total_records } = response;
+      this.setState({ data: result, total_records: total_records });
+    });
   };
 
-  componentWillMount() {
-    operateData(url, true, false, true, false, this, [
+  componentDidMount() {
+    api(url, [
       ["operation", "read"],
       ["user_type", "staff"],
       ["page_num", this.state.page_num + 1],
       ["page_size", this.state.page_size]
-    ]);
+    ]).then(response => {
+      const { result, total_records, filter } = response;
+      this.setState({
+        data: result,
+        total_records: total_records,
+        filterdata: filter
+      });
+    });
   }
 
   render() {
+    console.log(this.state.data, "data");
     const { classes } = this.props;
+    let renderTableBodyElement = null;
+    if (this.state.data !== null) {
+      renderTableBodyElement = this.state.data.map((row, key) => {
+        return (
+          <TableRow dataid={row.id} key={key}>
+            <TableCell>{changeCase.titleCase(row.first_name)}</TableCell>
+            <TableCell>{changeCase.titleCase(row.last_name)}</TableCell>
+
+            <TableCell>{row.email}</TableCell>
+            <TableCell>
+              <Switch
+                checked={row.is_active}
+                onChange={this.handleChange(row.id, "is_active")}
+                value={row.id}
+                color="primary"
+              />
+            </TableCell>
+            <TableCell>
+              <Checkbox
+                checked={row.is_admin}
+                color="primary"
+                onChange={this.handleChange(row.id, "is_admin")}
+                value={row.id}
+              />
+            </TableCell>
+            <TableCell>
+              <Checkbox
+                checked={row.is_manager}
+                color="primary"
+                disabled={row.is_admin}
+                onChange={this.handleChange(row.id, "is_manager")}
+                value={row.id}
+              />
+            </TableCell>
+            <TableCell className={classes.lastchild}>
+              <IconButton
+                name="edit_button"
+                value={row.id}
+                onClick={this.editUserModal}
+              >
+                <Icon>edit</Icon>
+              </IconButton>
+            </TableCell>
+          </TableRow>
+        );
+      });
+    }
     return (
       <div>
         <Fab
           color="primary"
           aria-label="Edit"
-          onClick={this.modalOpen}
+          onClick={this.addUserModal}
           name="newdata"
           className={classes.floatingButton}
         >
@@ -421,57 +518,7 @@ class UserManamgent extends React.Component {
                   <TableCell className={classes.lastchild} />
                 </TableRow>
               </TableHead>
-              <TableBody>
-                {this.state.data.map((row, key) => {
-                  return (
-                    <TableRow dataid={row.id} key={key}>
-                      <TableCell>
-                        {changeCase.titleCase(row.first_name)}
-                      </TableCell>
-                      <TableCell>
-                        {changeCase.titleCase(row.last_name)}
-                      </TableCell>
-
-                      <TableCell>{row.email}</TableCell>
-                      <TableCell>
-                        <Switch
-                          checked={row.is_active}
-                          onChange={this.handleChange(row.id, "is_active")}
-                          value={row.id}
-                          color="primary"
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Checkbox
-                          checked={row.is_admin}
-                          color="primary"
-                          onChange={this.handleChange(row.id, "is_admin")}
-                          value={row.id}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Checkbox
-                          checked={row.is_manager}
-                          color="primary"
-                          disabled={row.is_admin}
-                          onChange={this.handleChange(row.id, "is_manager")}
-                          value={row.id}
-                        // ref = "is_manager"
-                        />
-                      </TableCell>
-                      <TableCell className={classes.lastchild}>
-                        <IconButton
-                          name="edit_button"
-                          value={row.id}
-                          onClick={this.modalOpen}
-                        >
-                          <Icon>edit</Icon>
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
+              <TableBody>{renderTableBodyElement}</TableBody>
             </Table>
             <TablePagination
               rowsPerPageOptions={[5, 10, 20, 30, 40, 50]}
@@ -560,8 +607,8 @@ class UserManamgent extends React.Component {
                     this.state.modaldata.is_admin
                       ? "admin"
                       : this.state.modaldata.is_manager
-                        ? "manager"
-                        : "staff"
+                      ? "manager"
+                      : "staff"
                   }
                   onChange={this.handleModalChange}
                 >
