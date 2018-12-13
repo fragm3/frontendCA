@@ -596,6 +596,7 @@ class UserManamgent extends React.Component {
                   label="Email"
                   name="email"
                   required
+                  disabled={!this.state.is_new}
                   onKeyUp={this.keyUpHandler}
                   type="email"
                   error={this.state.errormessage.indexOf("email") >= 0}
