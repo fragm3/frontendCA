@@ -148,6 +148,7 @@ class UserManamgent extends React.Component {
     var user_type = this.state.user_filter;
     var search = this.state.search;
     var sort_by = this.state.sort_by;
+    this.setState({ page_num: 0 });
     if (event.target.name === "search") {
       this.setState({ search: event.target.value });
       search = event.target.value;
@@ -337,10 +338,10 @@ class UserManamgent extends React.Component {
       ["page_num", page + 1],
       ["page_size", this.state.page_size]
     ]).then(response => {
-      const { result, total_records } = response;
+      const { result } = response;
       this.setState({
-        data: result,
-        total_records: total_records
+        data: result
+        // total_records: total_records
       });
     });
   };
@@ -356,8 +357,10 @@ class UserManamgent extends React.Component {
       ["page_num", this.state.page_num + 1],
       ["page_size", event.target.value]
     ]).then(response => {
-      const { result, total_records } = response;
-      this.setState({ data: result, total_records: total_records });
+      const { result } = response;
+      this.setState({ data: result
+        // total_records: total_records 
+      });
     });
   };
 
