@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const baseurl = "http://localhost:8000/";
-
+// const baseurl = "http://localhost:8000/";
+const baseurl = "http://careeranna.shashwatyadav.com/api/";
 function operateData(url,update_result,snackbar_show,getfilters,modaldata,component,filters){
     var bodyFormData = new FormData();
     console.log(filters)
