@@ -15,7 +15,8 @@ import Switch from "@material-ui/core/Switch";
 import Checkbox from "@material-ui/core/Checkbox";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
+import Select from "react-select";
+//import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
 import MenuItem from "@material-ui/core/MenuItem";
 import Icon from "@material-ui/core/Icon";
@@ -43,6 +44,12 @@ const emptymodaldata = {
   is_staff: true,
   is_active: true
 };
+
+const permOptions = [
+  { label: "Staff", value: "staff" },
+  { label: "Manager", value: "manager" },
+  { label: "Admin", value: "admin" }
+];
 
 class UserManamgent extends React.Component {
   constructor(props) {
@@ -81,7 +88,8 @@ class UserManamgent extends React.Component {
       errormessage: [],
       firstSubmit: false,
       activeUserId: "",
-      name: []
+      name: [],
+      value: []
     };
   }
 
@@ -167,22 +175,32 @@ class UserManamgent extends React.Component {
       sort_by = event.target.value;
     }
 
-    if (event.target.name === "user_type") {
-      console.log(event.target.value, "event.target.value");
-      if (event.target.value === "") {
-        this.setState({ user_filter: ["staff"] });
-        user_type = "staff";
-      } else {
-        user_type = event.target.value;
-      }
-      this.setState({ user_filter: event.target.value });
-    }
-
     api(url, [
       ["operation", "read"],
       ["user_type", user_type],
       ["search", search],
       ["sort_by", sort_by],
+      ["page_num", 1],
+      ["page_size", this.state.page_size]
+    ]).then(response => {
+      const { result, total_records } = response;
+      console.log(response.result, "For filter change");
+      this.setState({ data: result, total_records: total_records });
+    });
+  };
+
+  handleFilterChangeSolo = value => {
+    console.log("You have selected value: ", value);
+    this.setState({ value });
+    var arr = [];
+    for (var i = 0, l = value.length; i < l; i++) {
+      arr.push(value[i].value + ",");
+    }
+    console.log(arr, "Arr");
+    this.setState({ user_type: arr });
+    api(url, [
+      ["operation", "read"],
+      ["user_type", arr],
       ["page_num", 1],
       ["page_size", this.state.page_size]
     ]).then(response => {
@@ -451,24 +469,15 @@ class UserManamgent extends React.Component {
               <InputLabel className={classes.dropdownlabel} htmlFor="user-type">
                 User Type
               </InputLabel>
-              <Select
-                multiple
-                value={this.state.user_filter}
-                onChange={this.handleFilterChange}
-                inputProps={{
-                  name: "user_type",
-                  id: "user-type"
-                }}
-                renderValue={selected => selected.join(", ")}
-                className={classes.dropdownselect}
-              >
-                {this.state.filterdata.user_type.map((usertype, key) => (
-                  <MenuItem key={key} value={usertype.id}>
-                    {usertype.label}
-                  </MenuItem>
-                ))}
-                ))}
-              </Select>
+              <React
+                isMulti
+                name="colors"
+                options={permOptions}
+                className="basic-multi-select"
+                classNamePrefix="select"
+                onChange={this.handleFilterChangeSolo}
+                value={this.state.value}
+              />
             </FormControl>
             <FormControl className={classes.formControl}>
               <TextField
