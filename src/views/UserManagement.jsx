@@ -30,7 +30,7 @@ import "./style.css";
 
 // import the component
 
-const random = Math.random() * (1 - 0.7) + 0.9
+const random = Math.random() * (1 - 0.7) + 0.9;
 
 const MyListLoader = () => (
   <ContentLoader
@@ -455,7 +455,6 @@ class UserManamgent extends React.Component {
   }
 
   render() {
-    console.log("sortValue", this.state.sortValue)
     const { classes } = this.props;
     let renderTableBodyElement = null;
     if (this.state.loaded === true) {
@@ -524,6 +523,24 @@ class UserManamgent extends React.Component {
         </TableRow>
       );
     }
+    let orderByIcon = null;
+
+    if (this.state.sortValue && this.state.sortValue.value != "none") {
+      if (this.state.order_by === "asc") {
+        orderByIcon = (
+          <Icon onClick={this.toggleOrderBy} className={classes.filterIcon}>
+            arrow_upward
+          </Icon>
+        );
+      } else {
+        orderByIcon = (
+          <Icon onClick={this.toggleOrderBy} className={classes.filterIcon}>
+            arrow_downward
+          </Icon>
+        );
+      }
+    }
+
     return (
       <div>
         <Fab
@@ -566,11 +583,7 @@ class UserManamgent extends React.Component {
               />
             </div>
             <div className="super-select-orderby-container">
-            {this.state.sortValue && this.state.sortValue.value != "none" &&
-              <Icon onClick={this.toggleOrderBy} className={classes.filterIcon}>
-                sort
-              </Icon>
-            }
+              {orderByIcon}
               <div className="super-select-container">
                 Sort By
                 <Select
