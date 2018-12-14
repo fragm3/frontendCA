@@ -11,6 +11,7 @@
     flex-direction: row;
     justify-content: space-between;
     margin: 10px;
+    min-height: 72px;
 }
 
 .super-select-container{
@@ -51,4 +52,8 @@
     display: flex;
     justify-content: space-between;
     width: 40%;
+}
+
+.contentLoaderStyle{
+    width: 100%
 }
