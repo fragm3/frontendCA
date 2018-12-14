@@ -45,14 +45,14 @@ const dashboardRoutes = [
   //   component: UsersPage,
   //   type:"view"
   // },
-  // {
-  //   path: "/adminpanel/user-management",
-  //   sidebarName: "User Management",
-  //   navbarName: "User Management",
-  //   icon: Person,
-  //   component: UsersPage,
-  //   type:"view"
-  // },
+  {
+    path: "/adminpanel/user-management",
+    sidebarName: "User Management",
+    navbarName: "User Management",
+    icon: Person,
+    component: UsersPage,
+    type:"view"
+  },
   // {
   //   path: "/adminpanel/content-usage",
   //   sidebarName: "Content Usage",

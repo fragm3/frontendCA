@@ -25,8 +25,26 @@ import Button from "components/Button.jsx";
 import TablePagination from "@material-ui/core/TablePagination";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import IconButton from "@material-ui/core/IconButton";
-
+import ContentLoader from "react-content-loader";
 import "./style.css";
+
+// import the component
+
+const random = Math.random() * (1 - 0.7) + 0.9
+
+const MyListLoader = () => (
+  <ContentLoader
+    speed={2}
+    primaryColor="#f3f3f3"
+    secondaryColor="#ecebeb"
+    className="contentLoaderStyle"
+  >
+    <rect x="0" y="15" rx="5" ry="5" width={400 * random} height="10" />
+    <rect x="0" y="75" rx="5" ry="5" width="350" height="10" />
+    <rect x="0" y="45" rx="5" ry="5" width={200 * random} height="10" />
+    <rect x="0" y="104" rx="5" ry="5" width="400" height="10" />
+  </ContentLoader>
+);
 
 var validator = require("email-validator");
 var changeCase = require("change-case");
@@ -95,7 +113,8 @@ class UserManamgent extends React.Component {
       firstSubmit: false,
       activeUserId: "",
       name: [],
-      filterValue: ""
+      filterValue: "",
+      loaded: false
     };
   }
 
@@ -396,7 +415,6 @@ class UserManamgent extends React.Component {
       const { result } = response;
       this.setState({
         data: result
-        // total_records: total_records
       });
     });
   };
@@ -415,7 +433,6 @@ class UserManamgent extends React.Component {
       const { result } = response;
       this.setState({
         data: result
-        // total_records: total_records
       });
     });
   };
@@ -431,15 +448,17 @@ class UserManamgent extends React.Component {
       this.setState({
         data: result,
         total_records: total_records,
-        filterdata: filter
+        filterdata: filter,
+        loaded: true
       });
     });
   }
 
   render() {
+    console.log("sortValue", this.state.sortValue)
     const { classes } = this.props;
     let renderTableBodyElement = null;
-    if (this.state.data !== null) {
+    if (this.state.loaded === true) {
       renderTableBodyElement = this.state.data.map((row, key) => {
         return (
           <TableRow dataid={row.id} key={key}>
@@ -484,6 +503,26 @@ class UserManamgent extends React.Component {
           </TableRow>
         );
       });
+    } else {
+      renderTableBodyElement = (
+        <TableRow>
+          <TableCell>
+            <MyListLoader />
+          </TableCell>
+          <TableCell>
+            <MyListLoader />
+          </TableCell>
+          <TableCell>
+            <MyListLoader />
+          </TableCell>
+          <TableCell>
+            <MyListLoader />
+          </TableCell>
+          <TableCell>
+            <MyListLoader />
+          </TableCell>
+        </TableRow>
+      );
     }
     return (
       <div>
@@ -514,35 +553,37 @@ class UserManamgent extends React.Component {
             </div>
           </div>
           <div className="super-select-box">
-          <div className="super-select-container">
-            User Type
-            <Select
-              isMulti
-              name="filterBy"
-              options={filterByOptions}
-              className="basic-multi-select"
-              classNamePrefix="select"
-              onChange={this.handleFilterChange}
-              value={this.state.filterValue}
-            />
-          </div>
-          <div className="super-select-orderby-container">
-            <Icon onClick={this.toggleOrderBy} className={classes.filterIcon}>
-              sort
-            </Icon>
             <div className="super-select-container">
-              Sort By
+              User Type
               <Select
-                className="basic-single"
+                isMulti
+                name="filterBy"
+                options={filterByOptions}
+                className="basic-multi-select"
                 classNamePrefix="select"
-                isSearchable="true"
-                name="sortBy"
-                options={sortByOptions}
-                value={this.state.sortValue}
-                onChange={this.handleSortChange}
+                onChange={this.handleFilterChange}
+                value={this.state.filterValue}
               />
             </div>
-          </div>
+            <div className="super-select-orderby-container">
+            {this.state.sortValue && this.state.sortValue.value != "none" &&
+              <Icon onClick={this.toggleOrderBy} className={classes.filterIcon}>
+                sort
+              </Icon>
+            }
+              <div className="super-select-container">
+                Sort By
+                <Select
+                  className="basic-single"
+                  classNamePrefix="select"
+                  isSearchable="true"
+                  name="sortBy"
+                  options={sortByOptions}
+                  value={this.state.sortValue}
+                  onChange={this.handleSortChange}
+                />
+              </div>
+            </div>
           </div>
         </div>
         <Grid container={true}>
