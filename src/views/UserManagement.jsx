@@ -14,11 +14,8 @@ import Snackbar from "components/Snackbar.jsx";
 import Switch from "@material-ui/core/Switch";
 import Checkbox from "@material-ui/core/Checkbox";
 import TextField from "@material-ui/core/TextField";
-import InputLabel from "@material-ui/core/InputLabel";
 import Select from "react-select";
-// import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
-import MenuItem from "@material-ui/core/MenuItem";
 import Icon from "@material-ui/core/Icon";
 import Fab from "@material-ui/core/Fab";
 import Grid from "@material-ui/core/Grid";
@@ -45,10 +42,17 @@ const emptymodaldata = {
   is_active: true
 };
 
-const permOptions = [
+const filterByOptions = [
   { label: "Staff", value: "staff" },
   { label: "Manager", value: "manager" },
   { label: "Admin", value: "admin" }
+];
+
+const sortByOptions = [
+  { label: "None", value: "none" },
+  { label: "First Name", value: "first_name" },
+  { label: "Last Name", value: "last_name" },
+  { label: "Email", value: "email" }
 ];
 
 class UserManamgent extends React.Component {
@@ -69,7 +73,7 @@ class UserManamgent extends React.Component {
           secret_string: ""
         }
       ],
-      filterdata: { user_type: [], sort_by: [] },
+      filterdata: { user_type: [], sort_by: [], order_by: ""},
       // pagination variables
       page_num: 0,
       page_size: 10,
@@ -78,6 +82,7 @@ class UserManamgent extends React.Component {
       user_filter: [],
       search: "",
       sort_by: "",
+      order_by: "asc",
       // Snackbar variables
       snackbarMessage: "",
       showSnackbar: false,
@@ -89,7 +94,7 @@ class UserManamgent extends React.Component {
       firstSubmit: false,
       activeUserId: "",
       name: [],
-      value: []
+      filterValue: "",
     };
   }
 
@@ -160,26 +165,16 @@ class UserManamgent extends React.Component {
     this.hideSnackbar();
   };
 
-  handleFilterChange = event => {
-    var user_type = this.state.user_filter;
+  handleSearchChange = event => {
     var search = this.state.search;
-    var sort_by = this.state.sort_by;
     this.setState({ page_num: 0 });
     if (event.target.name === "search") {
       this.setState({ search: event.target.value });
       search = event.target.value;
     }
-
-    if (event.target.name === "sort_by") {
-      this.setState({ sort_by: event.target.value });
-      sort_by = event.target.value;
-    }
-
     api(url, [
       ["operation", "read"],
-      ["user_type", user_type],
       ["search", search],
-      ["sort_by", sort_by],
       ["page_num", 1],
       ["page_size", this.state.page_size]
     ]).then(response => {
@@ -189,9 +184,30 @@ class UserManamgent extends React.Component {
     });
   };
 
-  handleFilterChangeSolo = value => {
+  //Solo super select
+  handleSortChange = value => {
+    debugger;
+    if(value) {
+      this.setState({ sortValue: value });
+      this.setState({ sort_by: value.value });
+      api(url, [
+        ["operation", "read"],
+        ["sort_by", value.value],
+        ["page_num", 1],
+        ["page_size", this.state.page_size],
+        ["order_by", "desc"]
+      ]).then(response => {
+        const { result, total_records } = response;
+        console.log(response.result, "For sort by change");
+        this.setState({ data: result, total_records: total_records });
+      });
+    }
+  }
+
+  //Multi super select
+  handleFilterChange = value => {
     console.log("You have selected value: ", value);
-    this.setState({ value });
+    this.setState({ filterValue: value });
     var arr = [];
     for (var i = 0, l = value.length; i < l; i++) {
       arr.push(value[i].value + ",");
@@ -209,6 +225,25 @@ class UserManamgent extends React.Component {
       this.setState({ data: result, total_records: total_records });
     });
   };
+
+  toggleOrderBy = () => {
+    let orderBy = this.state.order_by;
+    let toggle;
+    toggle = (orderBy === "asc" ? "desc" : "asc")
+    this.setState({order_by: toggle})
+    api(url, [
+      ["operation", "read"],
+      ["user_type", this.state.user_type],
+      ["sort_by", this.state.sort_by],
+      ["order_by", toggle],
+      ["page_num", 1],
+      ["page_size", this.state.page_size]
+    ]).then(response => {
+      const { result, total_records } = response;
+      console.log(response.result, "For filter change");
+      this.setState({ data: result, total_records: total_records });
+    });
+  }
 
   handleModalChange = event => {
     var data = this.state.modaldata;
@@ -464,19 +499,17 @@ class UserManamgent extends React.Component {
         </Fab>
         <Grid container={true} alignItems="flex-end">
           <Grid item={true} xs={9}>
-            <Icon className={classes.filterIcon}>filter_list</Icon>
+            <Icon onClick={this.toggleOrderBy} className={classes.filterIcon}>filter_list</Icon>
             <FormControl className={classes.formControl}>
-              <InputLabel className={classes.dropdownlabel} htmlFor="user-type">
                 User Type
-              </InputLabel>
               <Select
                 isMulti
-                name="colors"
-                options={permOptions}
+                name="filterBy"
+                options={filterByOptions}
                 className="basic-multi-select"
                 classNamePrefix="select"
-                onChange={this.handleFilterChangeSolo}
-                value={this.state.value}
+                onChange={this.handleFilterChange}
+                value={this.state.filterValue}
               />
             </FormControl>
             <FormControl className={classes.formControl}>
@@ -488,34 +521,23 @@ class UserManamgent extends React.Component {
                 name="search"
                 margin="normal"
                 value={this.state.search}
-                onChange={this.handleFilterChange}
+                onChange={this.handleSearchChange}
               />
             </FormControl>
           </Grid>
           <Grid item={true} xs={3}>
-            <Icon className={classes.filterIcon}>sort</Icon>
+            <Icon onClick={this.toggleOrderBy} className={classes.filterIcon}>sort</Icon>
             <FormControl className={classes.formControl}>
-              <InputLabel className={classes.dropdownlabel} htmlFor="user-type">
                 Sort By
-              </InputLabel>
               <Select
-                className={classes.dropdownselect}
-                value={this.state.sort_by}
-                onChange={this.handleFilterChange}
-                inputProps={{
-                  name: "sort_by",
-                  id: "sort"
-                }}
-              >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                {this.state.filterdata.sort_by.map((sort, key) => (
-                  <MenuItem key={key} value={sort.id}>
-                    {sort.label}
-                  </MenuItem>
-                ))}
-              </Select>
+                className="basic-single"
+                classNamePrefix="select"
+                isSearchable="true"
+                name="sortBy"
+                options={sortByOptions}
+                value={this.state.sortValue}
+                onChange={this.handleSortChange}
+              />
             </FormControl>
           </Grid>
         </Grid>
