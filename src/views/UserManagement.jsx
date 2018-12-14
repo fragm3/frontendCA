@@ -455,6 +455,7 @@ class UserManamgent extends React.Component {
   }
 
   render() {
+    console.log("sortValue", this.state.sortValue)
     const { classes } = this.props;
     let renderTableBodyElement = null;
     if (this.state.loaded === true) {
