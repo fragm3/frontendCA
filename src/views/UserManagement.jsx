@@ -15,7 +15,6 @@ import Switch from "@material-ui/core/Switch";
 import Checkbox from "@material-ui/core/Checkbox";
 import TextField from "@material-ui/core/TextField";
 import Select from "react-select";
-import FormControl from "@material-ui/core/FormControl";
 import Icon from "@material-ui/core/Icon";
 import Fab from "@material-ui/core/Fab";
 import Grid from "@material-ui/core/Grid";
@@ -26,6 +25,8 @@ import Button from "components/Button.jsx";
 import TablePagination from "@material-ui/core/TablePagination";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import IconButton from "@material-ui/core/IconButton";
+
+import "./style.css";
 
 var validator = require("email-validator");
 var changeCase = require("change-case");
@@ -73,7 +74,7 @@ class UserManamgent extends React.Component {
           secret_string: ""
         }
       ],
-      filterdata: { user_type: [], sort_by: [], order_by: ""},
+      filterdata: { user_type: [], sort_by: [], order_by: "" },
       // pagination variables
       page_num: 0,
       page_size: 10,
@@ -94,7 +95,7 @@ class UserManamgent extends React.Component {
       firstSubmit: false,
       activeUserId: "",
       name: [],
-      filterValue: "",
+      filterValue: ""
     };
   }
 
@@ -186,23 +187,20 @@ class UserManamgent extends React.Component {
 
   //Solo super select
   handleSortChange = value => {
-    debugger;
-    if(value) {
-      this.setState({ sortValue: value });
-      this.setState({ sort_by: value.value });
-      api(url, [
-        ["operation", "read"],
-        ["sort_by", value.value],
-        ["page_num", 1],
-        ["page_size", this.state.page_size],
-        ["order_by", "desc"]
-      ]).then(response => {
-        const { result, total_records } = response;
-        console.log(response.result, "For sort by change");
-        this.setState({ data: result, total_records: total_records });
-      });
-    }
-  }
+    this.setState({ sortValue: value });
+    this.setState({ sort_by: value.value });
+    api(url, [
+      ["operation", "read"],
+      ["sort_by", value.value],
+      ["page_num", 1],
+      ["page_size", this.state.page_size],
+      ["order_by", "asc"]
+    ]).then(response => {
+      const { result, total_records } = response;
+      console.log(response.result, "For sort by change");
+      this.setState({ data: result, total_records: total_records });
+    });
+  };
 
   //Multi super select
   handleFilterChange = value => {
@@ -218,7 +216,8 @@ class UserManamgent extends React.Component {
       ["operation", "read"],
       ["user_type", arr],
       ["page_num", 1],
-      ["page_size", this.state.page_size]
+      ["page_size", this.state.page_size],
+      ["order_by", "asc"]
     ]).then(response => {
       const { result, total_records } = response;
       console.log(response.result, "For filter change");
@@ -229,8 +228,8 @@ class UserManamgent extends React.Component {
   toggleOrderBy = () => {
     let orderBy = this.state.order_by;
     let toggle;
-    toggle = (orderBy === "asc" ? "desc" : "asc")
-    this.setState({order_by: toggle})
+    toggle = orderBy === "asc" ? "desc" : "asc";
+    this.setState({ order_by: toggle });
     api(url, [
       ["operation", "read"],
       ["user_type", this.state.user_type],
@@ -243,7 +242,7 @@ class UserManamgent extends React.Component {
       console.log(response.result, "For filter change");
       this.setState({ data: result, total_records: total_records });
     });
-  }
+  };
 
   handleModalChange = event => {
     var data = this.state.modaldata;
@@ -497,38 +496,42 @@ class UserManamgent extends React.Component {
         >
           <Icon>add</Icon>
         </Fab>
-        <Grid container={true} alignItems="flex-end">
-          <Grid item={true} xs={9}>
-            <Icon onClick={this.toggleOrderBy} className={classes.filterIcon}>filter_list</Icon>
-            <FormControl className={classes.formControl}>
-                User Type
-              <Select
-                isMulti
-                name="filterBy"
-                options={filterByOptions}
-                className="basic-multi-select"
-                classNamePrefix="select"
-                onChange={this.handleFilterChange}
-                value={this.state.filterValue}
-              />
-            </FormControl>
-            <FormControl className={classes.formControl}>
-              <TextField
+        <div className="table-custom-options-container">
+          <div className="search-container">
+            Search
+            <div className="searchField">
+              <Icon className="searchIcon">search</Icon>
+              <input
                 id="searchInput"
                 label="Search"
-                className={classes.textField}
+                className="searchInput"
                 type="text"
                 name="search"
                 margin="normal"
                 value={this.state.search}
                 onChange={this.handleSearchChange}
               />
-            </FormControl>
-          </Grid>
-          <Grid item={true} xs={3}>
-            <Icon onClick={this.toggleOrderBy} className={classes.filterIcon}>sort</Icon>
-            <FormControl className={classes.formControl}>
-                Sort By
+            </div>
+          </div>
+          <div className="super-select-box">
+          <div className="super-select-container">
+            User Type
+            <Select
+              isMulti
+              name="filterBy"
+              options={filterByOptions}
+              className="basic-multi-select"
+              classNamePrefix="select"
+              onChange={this.handleFilterChange}
+              value={this.state.filterValue}
+            />
+          </div>
+          <div className="super-select-orderby-container">
+            <Icon onClick={this.toggleOrderBy} className={classes.filterIcon}>
+              sort
+            </Icon>
+            <div className="super-select-container">
+              Sort By
               <Select
                 className="basic-single"
                 classNamePrefix="select"
@@ -538,9 +541,10 @@ class UserManamgent extends React.Component {
                 value={this.state.sortValue}
                 onChange={this.handleSortChange}
               />
-            </FormControl>
-          </Grid>
-        </Grid>
+            </div>
+          </div>
+          </div>
+        </div>
         <Grid container={true}>
           <Paper className={classes.tableContainer}>
             <Table className={classes.table}>
